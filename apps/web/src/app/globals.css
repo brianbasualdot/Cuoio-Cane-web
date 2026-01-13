@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-cinzel);
+}
+
+:root {
+  /* RAW PALETTE DEFINITIONS */
+  --color-brand-black: #020202;
+  --color-brand-navy: #0D1B2A;
+  --color-brand-navy-light: #18283E;
+  --color-brand-platinum: #E0E1DD;
+  --color-brand-platinum-dark: #A0A09C;
+  --color-brand-coffee: #2C1E1A;
+  --color-brand-coffee-light: #4A332E;
+  --color-brand-copper: #AD8A6E;
+
+  /* SEMANTIC MAPPING */
+  --background: var(--color-brand-navy);
+  --foreground: var(--color-brand-platinum);
+
+  --color-copper: var(--color-brand-copper);
+  --color-navy: #0D1B2A;
+  /* For direct usage if needed, usually mapped via Tailwind */
+  --color-navy-light: var(--color-brand-navy-light);
+  --color-black: var(--color-brand-black);
+  --color-platinum: var(--color-brand-platinum);
+  --color-platinum-dark: var(--color-brand-platinum-dark);
+  --color-coffee: var(--color-brand-coffee);
+  --color-coffee-light: var(--color-brand-coffee-light);
+
+  --radius: 0.125rem;
+  /* Sharp/Premium edges */
+}
+
+/* Force Dark Mode aesthetic by default */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif), serif;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* Utilities */
+.text-copper {
+  color: var(--color-brand-copper);
+}
+
+.bg-copper {
+  background-color: var(--color-brand-copper);
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
