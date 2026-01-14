@@ -7,31 +7,34 @@
 
 :root {
   /* RAW PALETTE DEFINITIONS */
-  --color-brand-black: #020202;
-  --color-brand-navy: #0D1B2A;
-  --color-brand-navy-light: #18283E;
-  --color-brand-platinum: #E0E1DD;
-  --color-brand-platinum-dark: #A0A09C;
+  --color-brand-black: #0A0A0A;
+  /* Deep Black */
+  --color-brand-surface: #111111;
+  /* Surface/Card */
+  --color-brand-navy: #0B1C2D;
+  /* Deep Navy (Accent) */
+  --color-brand-platinum: #E6E6E6;
+  /* Soft White */
+  --color-brand-platinum-dark: #A3A3A3;
   --color-brand-coffee: #2C1E1A;
-  --color-brand-coffee-light: #4A332E;
-  --color-brand-copper: #AD8A6E;
+  --color-brand-copper: #C6A87C;
+  /* Faded Copper */
 
   /* SEMANTIC MAPPING */
-  --background: var(--color-brand-navy);
+  --background: var(--color-brand-black);
   --foreground: var(--color-brand-platinum);
 
   --color-copper: var(--color-brand-copper);
-  --color-navy: #0D1B2A;
-  /* For direct usage if needed, usually mapped via Tailwind */
-  --color-navy-light: var(--color-brand-navy-light);
+  --color-navy: var(--color-brand-navy);
+
   --color-black: var(--color-brand-black);
+  --color-surface: var(--color-brand-surface);
+
   --color-platinum: var(--color-brand-platinum);
   --color-platinum-dark: var(--color-brand-platinum-dark);
-  --color-coffee: var(--color-brand-coffee);
-  --color-coffee-light: var(--color-brand-coffee-light);
 
-  --radius: 0.125rem;
-  /* Sharp/Premium edges */
+  --radius: 0rem;
+  /* Sharp edges for premium feel */
 }
 
 /* Force Dark Mode aesthetic by default */

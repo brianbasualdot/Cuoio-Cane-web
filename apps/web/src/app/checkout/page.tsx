@@ -1,14 +1,23 @@
 'use client';
 
+
 import { useCartStore } from '@/lib/store';
 import { api } from '@/lib/api';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { AnimatedInput } from '@/components/ui/AnimatedInput';
+import { ShippingSelector } from '@/components/checkout/ShippingSelector';
+import { PaymentSelector } from '@/components/checkout/PaymentSelector';
+import { CheckoutSummary } from '@/components/checkout/CheckoutSummary';
+import { checkoutButtonVariants } from '@/lib/motion/checkout';
 
 export default function CheckoutPage() {
     const { items, totalPrice, clearCart } = useCartStore();
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
+
+    const [shippingMethod, setShippingMethod] = useState('andreani');
+    const [paymentMethod, setPaymentMethod] = useState('mercadopago');
 
     // Basic Form State (Use React Hook Form in production)
     const [formData, setFormData] = useState({
@@ -21,11 +30,15 @@ export default function CheckoutPage() {
         zip: '',
     });
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e: any) => {
+    // Calculate details
+    const subtotal = totalPrice();
+    const shippingCost = shippingMethod === 'pickup' ? 0 : 5000; // Mock cost
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
@@ -42,7 +55,7 @@ export default function CheckoutPage() {
                     zip_code: formData.zip,
                     number: '123' // Mock
                 },
-                shipping_method: 'andreani', // Mock
+                shipping_method: shippingMethod,
                 items: items.map(item => ({
                     variant_id: item.variantId,
                     quantity: item.quantity
@@ -52,9 +65,9 @@ export default function CheckoutPage() {
             const order = await api.post('/orders', orderPayload);
 
             // 2. Init Payment
-            const paymentInit = await api.post(`/payments/init/${order.id}`, {});
+            const paymentInit = await api.post(`/payments/init/${order.id}`, { method: paymentMethod });
 
-            // 3. Clear Cart & Redirect to MP
+            // 3. Clear Cart & Redirect
             clearCart();
             window.location.href = paymentInit.init_point;
 
@@ -69,83 +82,89 @@ export default function CheckoutPage() {
         return (
             <div className="container py-20 text-center">
                 <h1 className="text-2xl font-serif mb-4">Tu carrito está vacío</h1>
-                <a href="/products" className="text-primary hover:underline">Volver a la tienda</a>
+                <Link href="/products" className="text-primary hover:underline">Volver a la tienda</Link>
             </div>
         );
     }
 
+
     return (
-        <div className="container px-4 py-12 md:py-20 max-w-4xl">
-            <h1 className="text-3xl font-serif text-primary mb-12 border-b pb-4">Checkout</h1>
+        <div className="container px-4 py-24 md:py-32 max-w-5xl">
+            <h1 className="text-sm font-medium tracking-[0.3em] text-muted-foreground uppercase mb-16 border-b border-white/5 pb-6">
+                Finalizar Compra
+            </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24">
                 {/* Form */}
-                <div>
-                    <h2 className="text-lg font-semibold mb-6">Datos de Envío</h2>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Email</label>
-                            <input required name="email" type="email" value={formData.email} onChange={handleChange} className="w-full p-2 border border-input rounded-sm bg-background" />
+                <div className="space-y-16">
+                    {/* DIV 1 — Datos del cliente */}
+                    <section>
+                        <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground/60 mb-8">Contacto</h2>
+                        <div className="grid gap-6">
+                            <AnimatedInput required name="email" type="email" label="Email" value={formData.email} onChange={handleChange} />
+                            <AnimatedInput required name="fullName" type="text" label="Nombre Completo" value={formData.fullName} onChange={handleChange} />
+                            <AnimatedInput required name="phone" type="tel" label="Teléfono" value={formData.phone} onChange={handleChange} />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Nombre Completo</label>
-                            <input required name="fullName" type="text" value={formData.fullName} onChange={handleChange} className="w-full p-2 border border-input rounded-sm bg-background" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium mb-1">Teléfono</label>
-                            <input required name="phone" type="tel" value={formData.phone} onChange={handleChange} className="w-full p-2 border border-input rounded-sm bg-background" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Dirección</label>
-                                <input required name="address" type="text" value={formData.address} onChange={handleChange} className="w-full p-2 border border-input rounded-sm bg-background" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Código Postal</label>
-                                <input required name="zip" type="text" value={formData.zip} onChange={handleChange} className="w-full p-2 border border-input rounded-sm bg-background" />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Ciudad</label>
-                                <input required name="city" type="text" value={formData.city} onChange={handleChange} className="w-full p-2 border border-input rounded-sm bg-background" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Provincia</label>
-                                <input required name="province" type="text" value={formData.province} onChange={handleChange} className="w-full p-2 border border-input rounded-sm bg-background" />
-                            </div>
+                    </section>
+
+                    {/* DIV 2 — Envío */}
+                    <section>
+                        <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground/60 mb-8">Entrega</h2>
+                        <div className="mb-8">
+                            <ShippingSelector
+                                selectedId={shippingMethod}
+                                onSelect={setShippingMethod}
+                                options={[
+                                    { id: 'andreani', name: 'Envío a Domicilio', price: 5000, description: 'Cobertura nacional. 3-5 días hábiles.' },
+                                    { id: 'pickup', name: 'Retiro en Showroom', price: 0, description: 'Palermo Soho. Cita previa.' }
+                                ]}
+                            />
                         </div>
 
-                        <div className="pt-6">
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full py-4 bg-primary text-primary-foreground font-bold tracking-widest hover:bg-primary/90 disabled:opacity-70 transition-colors uppercase"
-                            >
-                                {loading ? 'Procesando...' : 'Ir a Pagar'}
-                            </button>
-                            <p className="text-xs text-center mt-4 text-muted-foreground">
-                                Pagos procesados de forma segura por Mercado Pago.
-                            </p>
+                        {shippingMethod !== 'pickup' && (
+                            <div className="grid gap-6">
+                                <AnimatedInput required name="address" type="text" label="Dirección y Altura" value={formData.address} onChange={handleChange} />
+                                <div className="grid grid-cols-2 gap-6">
+                                    <AnimatedInput required name="city" type="text" label="Ciudad" value={formData.city} onChange={handleChange} />
+                                    <AnimatedInput required name="zip" type="text" label="Código Postal" value={formData.zip} onChange={handleChange} />
+                                </div>
+                                <AnimatedInput required name="province" type="text" label="Provincia" value={formData.province} onChange={handleChange} />
+                            </div>
+                        )}
+                    </section>
+
+                    {/* DIV 3 — Pago (Selector part) */}
+                    <section>
+                        <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground/60 mb-8">Pago</h2>
+                        <PaymentSelector selectedId={paymentMethod} onSelect={setPaymentMethod} />
+                    </section>
+
+                    <div className="pt-8">
+                        <motion.button
+                            type="submit"
+                            variants={checkoutButtonVariants}
+                            initial="enabled"
+                            animate={loading ? "disabled" : "enabled"}
+                            whileHover={!loading ? "hover" : undefined}
+                            whileTap={!loading ? "tap" : undefined}
+                            onClick={handleSubmit}
+                            disabled={loading}
+                            className="w-full h-16 bg-white text-black text-xs font-bold tracking-[0.25em] uppercase rounded-sm border border-transparent hover:bg-brand-platinum transition-colors"
+                        >
+                            {loading ? 'Procesando...' : 'Pagar y Finalizar'}
+                        </motion.button>
+                        <div className="flex justify-center mt-6">
+                            <span className="text-[10px] uppercase tracking-widest text-muted-foreground/40 flex items-center gap-2">
+                                <span className="w-1 h-1 bg-green-500/50 rounded-full"></span>
+                                Transacción Encriptada 256-bit
+                            </span>
                         </div>
-                    </form>
+                    </div>
                 </div>
 
                 {/* Summary */}
-                <div className="bg-muted/20 p-8 h-fit sticky top-24 rounded-sm">
-                    <h2 className="text-lg font-semibold mb-6">Resumen de Compra</h2>
-                    <div className="space-y-4 mb-6">
-                        {items.map(item => (
-                            <div key={item.variantId} className="flex justify-between text-sm">
-                                <span>{item.name} ({item.variantName}) x {item.quantity}</span>
-                                <span>{new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(item.price * item.quantity)}</span>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="border-t border-border pt-4 flex justify-between font-bold text-lg">
-                        <span>Total</span>
-                        <span>{new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(totalPrice())}</span>
-                    </div>
+                <div className="md:sticky md:top-24 h-fit">
+                    <CheckoutSummary items={items} subtotal={subtotal} shippingCost={shippingCost} />
                 </div>
             </div>
         </div>

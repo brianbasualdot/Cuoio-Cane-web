@@ -5,7 +5,9 @@ export class ApiClient {
         this.customFetch = async (input, init) => {
             const url = process.env.NEXT_PUBLIC_API_URL
                 ? `${process.env.NEXT_PUBLIC_API_URL}${input}`
-                : `http://localhost:3002${input}`;
+                : `http://127.0.0.1:3002${input}`;
+
+            console.log(`[API Client] Fetching: ${url}`);
 
             const headers = {
                 'Content-Type': 'application/json',
@@ -17,12 +19,24 @@ export class ApiClient {
                 headers,
             });
 
-            if (!response.ok) {
-                const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-                throw new Error(error.message || `API error: ${response.status}`);
+            if (response.status === 204) {
+                return null;
             }
 
-            return response.json();
+            const text = await response.text();
+            let data;
+            try {
+                data = text ? JSON.parse(text) : null;
+            } catch (e) {
+                console.error('[API Client] Failed to parse JSON:', text);
+                throw new Error('Invalid JSON response from API');
+            }
+
+            if (!response.ok) {
+                throw new Error(data?.message || `API error: ${response.status}`);
+            }
+
+            return data;
         };
     }
 

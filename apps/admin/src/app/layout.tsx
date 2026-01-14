@@ -43,11 +43,11 @@ export default async function RootLayout({
 
   return (
     <html lang="es">
-      <body className={`${inter.className} min-h-screen bg-gray-50 flex`}>
+      <body className={`${inter.className} min-h-screen bg-neutral-950 text-neutral-400 flex selection:bg-neutral-800 selection:text-white`}>
         {user && (
-          <aside className="w-64 bg-gray-900 text-gray-300 flex flex-col fixed h-full z-10">
-            <div className="h-16 flex items-center px-6 border-b border-gray-800">
-              <span className="font-bold text-white tracking-widest">CUOIO ADMIN</span>
+          <aside className="w-64 bg-black border-r border-white/5 flex flex-col fixed h-full z-10">
+            <div className="h-16 flex items-center px-6 border-b border-white/5">
+              <span className="font-mono text-xs font-bold text-neutral-200 tracking-[0.2em] uppercase">CUOIO ADMIN</span>
             </div>
             <nav className="flex-1 p-4 space-y-1">
               <NavLink href="/" icon={LayoutDashboard}>Dashboard</NavLink>
@@ -56,15 +56,15 @@ export default async function RootLayout({
               <NavLink href="/customers" icon={Users}>Clientes</NavLink>
               <NavLink href="/shipments" icon={Package}>Envíos</NavLink>
 
-              <div className="pt-8 pb-2 px-3 text-xs font-semibold uppercase text-gray-500">Sistema</div>
+              <div className="pt-8 pb-4 px-3 text-[10px] font-mono font-medium uppercase tracking-widest text-neutral-700">Sistema</div>
               <NavLink href="/staff" icon={Settings}>Staff</NavLink>
-              <NavLink href="/audit" icon={FileText}>Audit Logs</NavLink>
+              <NavLink href="/audit" icon={FileText}>Logs</NavLink>
             </nav>
-            <div className="p-4 border-t border-gray-800">
+            <div className="p-4 border-t border-white/5">
               <form action="/auth/signout" method="post">
-                <button className="flex items-center gap-3 px-3 py-2 text-sm font-medium hover:text-white transition-colors w-full text-left">
-                  <LogOut className="w-5 h-5" />
-                  Cerrar Sesión
+                <button className="flex items-center gap-3 px-3 py-2 text-xs font-medium uppercase tracking-wider text-neutral-500 hover:text-neutral-300 transition-colors w-full text-left">
+                  <LogOut className="w-4 h-4" />
+                  Salir
                 </button>
               </form>
             </div>
@@ -81,8 +81,8 @@ export default async function RootLayout({
 
 function NavLink({ href, icon: Icon, children }: any) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-800 hover:text-white transition-colors">
-      <Icon className="w-5 h-5" />
+    <Link href={href} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm text-neutral-400 hover:bg-white/5 hover:text-neutral-200 transition-all border border-transparent hover:border-white/5">
+      <Icon className="w-4 h-4 opacity-70" />
       {children}
     </Link>
   );

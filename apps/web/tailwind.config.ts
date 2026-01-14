@@ -15,39 +15,36 @@ const config: Config = {
                 // Semantic Tokens
                 primary: {
                     DEFAULT: "var(--color-copper)",
-                    foreground: "var(--color-black)",
+                    foreground: "#000000",
                 },
                 secondary: {
-                    DEFAULT: "var(--color-navy)",
+                    DEFAULT: "var(--color-navy)", /* Now used for accents/hover, not main bg */
                     foreground: "var(--color-platinum)",
                 },
-                accent: {
-                    DEFAULT: "var(--color-coffee)",
+                surface: {
+                    DEFAULT: "var(--color-surface)",
                     foreground: "var(--color-platinum)",
                 },
                 muted: {
-                    DEFAULT: "var(--color-navy-light)",
+                    DEFAULT: "#1A1A1A",
                     foreground: "var(--color-platinum-dark)",
                 },
                 card: {
-                    DEFAULT: "var(--color-navy)",
+                    DEFAULT: "var(--color-surface)",
                     foreground: "var(--color-platinum)",
                 },
-                border: "var(--color-coffee-light)",
-                input: "var(--color-navy-light)",
+                border: "#262626",
+                input: "#171717",
                 ring: "var(--color-copper)",
-                destructive: "#991B1B",
+                destructive: "#7F1D1D",
 
                 // Raw Palette (for reference or utility)
                 brand: {
-                    black: "#050505",
-                    navy: "#0D1B2A",
-                    navyLight: "#1B263B",
-                    platinum: "#E0E1DD",
-                    platinumDark: "#8D8D8A",
-                    coffee: "#3E2723",
-                    coffeeLight: "#5D4037",
-                    copper: "#AD8A6E",
+                    black: "#0A0A0A",
+                    surface: "#111111",
+                    navy: "#0B1C2D",
+                    platinum: "#E6E6E6",
+                    copper: "#C6A87C",
                 }
             },
             fontFamily: {
