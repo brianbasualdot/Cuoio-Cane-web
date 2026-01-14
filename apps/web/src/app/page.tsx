@@ -1,7 +1,7 @@
 import { api } from '@/lib/api';
 import { ProductCard } from '@/components/product/ProductCard';
 import Link from 'next/link';
-import { MotionDiv, MotionSection, MotionH1, MotionP, MotionSpan } from '@/components/motion/MotionProxy';
+import { MotionDiv, MotionSection, MotionH1, MotionP, MotionSpan, MotionLine } from '@/components/motion/MotionProxy';
 import { fadeInUp, heroItem, staggerContainer } from '@/lib/motion';
 import { sectionFadeVariants, materialTextVariants, lineRevealVariants } from '@/lib/motion/storytelling';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -119,7 +119,7 @@ export default async function Home() {
             variants={sectionFadeVariants}
           >
             <svg width="1" height="80" className="overflow-visible">
-              <MotionDiv as="line" x1="0" y1="0" x2="0" y2="80" stroke="white" strokeWidth="1" strokeOpacity="0.2" variants={lineRevealVariants} />
+              <MotionLine x1="0" y1="0" x2="0" y2="80" stroke="white" strokeWidth="1" strokeOpacity="0.2" variants={lineRevealVariants} />
             </svg>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Técnica</p>
             <p className="font-serif text-xl text-brand-platinum/60">Construcción honesta. Sin adornos innecesarios.</p>

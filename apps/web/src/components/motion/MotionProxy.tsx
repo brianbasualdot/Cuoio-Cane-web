@@ -10,3 +10,5 @@ export const MotionSpan = motion.span;
 export const MotionButton = motion.button;
 export const MotionNav = motion.nav;
 export const MotionA = motion.a;
+export const MotionLine = motion.line;
+export const MotionImg = motion.img;
