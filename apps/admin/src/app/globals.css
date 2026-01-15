@@ -2,94 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* ========================================= */
-  /* CUOIO CANE ATELIER PALETTE (STRICT)       */
-  /* ========================================= */
+@layer base {
+  :root {
+    /* ========================================= */
+    /* DESIGN TOKENS: ATELIER SYSTEM             */
+    /* ========================================= */
 
-  /* BACKGROUNDS */
-  --background: #09090b;
-  /* Deepest Charcoal/Black - Main Canvas */
-  --surface: #121212;
-  /* Elevated Black - Cards, Sidebar */
-  --surface-hover: #18181b;
-  /* Subtle feedback */
+    /* COLOR: BACKGROUNDS */
+    --bg-app: #09090b;
+    /* Deep Charcoal */
+    --bg-surface: #121212;
+    /* Elevated Black */
+    --bg-surface-hover: #18181b;
+    /* Interactive Surface */
+    --bg-input: #09090b;
+    /* Input Field Background */
 
-  /* BORDERS */
-  --border: #27272a;
-  /* Zinc 800 - Fine structural lines */
-  --border-light: #3f3f46;
-  /* Slightly visible border */
+    /* COLOR: BORDERS */
+    --border-base: #27272a;
+    /* Structural Dividers */
+    --border-subtle: #3f3f46;
+    /* Secondary/Hover Borders */
+    --border-focus: #5D4037;
+    /* Active Input Border (Coffee) */
 
-  /* TEXT ELEMENTAL */
-  --text-primary: #f4f4f5;
-  /* Zinc 100 - Main Content (Not pure white) */
-  --text-secondary: #a1a1aa;
-  /* Zinc 400 - Labels, Metadata */
-  --text-muted: #52525b;
-  /* Zinc 600 - Disabled / Background text */
+    /* COLOR: TEXT */
+    --text-primary: #f4f4f5;
+    /* Main Reading */
+    --text-secondary: #a1a1aa;
+    /* Metadata / Labels */
+    --text-muted: #52525b;
+    /* Disabled / Placeholders */
+    --text-copper: #d4b483;
+    /* Brand Accent Text */
 
-  /* ACCENTS (ATELIER LEATHER) */
-  --accent-coffee: #3E2723;
-  /* Deep Coffee - Primary Brand Action */
-  --accent-coffee-light: #5D4037;
-  /* Hover / Border Accent */
-  --accent-copper: #d4b483;
-  /* Muted Metallic - Highlights/Status */
+    /* COLOR: ACCENTS */
+    --accent-coffee: #3E2723;
+    /* Main Action Background */
+    --accent-coffee-hover: #4E342E;
+    /* Hover Action */
+    --accent-copper: #d4b483;
+    /* Highlights */
 
-  /* FONTS (Referenced in Tailwind Config) */
-  /* --font-inter (UI) */
-  /* --font-cormorant (Titles) */
-  /* --font-playfair (Subtitles/Labels) */
-}
+    /* RADII (Strict System) */
+    --radius-sm: 0.25rem;
+    /* 4px - Tags, Small inputs */
+    --radius-md: 0.5rem;
+    /* 8px - Inputs, Buttons */
+    --radius-lg: 0.75rem;
+    /* 12px - Cards, Modals */
 
-/* GLOBAL RESET & HARDENING */
-html,
-body {
-  height: 100%;
-  width: 100%;
-  background-color: var(--background);
-  color: var(--text-primary);
-  /* Prevent bounce effect on Mac */
-  overscroll-behavior: none;
-}
+    /* SHADOWS (Atelier Depth) */
+    --shadow-1: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    --shadow-2: 0 10px 15px -3px rgba(0, 0, 0, 0.8);
+  }
 
-/* TEXT SMOOTHING */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* SCROLLBARS (Minimalist) */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-
-/* UTILITIES */
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* FORM RESET (Base Input Styles) */
-input,
-textarea,
-select {
-  background: transparent;
-  outline: none;
+  body {
+    @apply bg-[var(--bg-app)] text-[var(--text-primary)] antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
 }
