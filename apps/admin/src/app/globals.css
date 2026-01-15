@@ -5,42 +5,56 @@
 :root {
   /* Palette: Deep Black / Atelier */
   --background: #09090b; /* Very deep charcoal/black */
-  --surface: #121212;    /* Slightly lighter for cards/bars */
-  --surface-hover: #18181b;
+  --surface: #121212;    /* Slightly lighter for cards/bars, elevated surfaces */
+  --surface-hover: #1c1c1f; /* Hover state for surfaces */
   --border: #27272a;     /* Fine dark gray border */
   
-  --text-primary: #e4e4e7;   /* Zinc 200 */
-  --text-secondary: #a1a1aa; /* Zinc 400 */
+  --text-primary: #f4f4f5;   /* Zinc 100 - High contrast text (off-white) */
+  --text-secondary: #a1a1aa; /* Zinc 400 - Muted text */
+  --text-muted: #52525b;     /* Zinc 600 - Very muted text */
   
-  --accent-copper: #d4b483;  /* Muted Gold/Copper */
+  --accent-copper: #d4b483;  /* Muted Gold/Copper - Primary accent */
+  --accent-copper-dim: #9ca3af; /* Fallback or secondary accent if needed */
   
-  --foreground-rgb: 228, 228, 231;
+  --foreground-rgb: 244, 244, 245;
 }
 
 body {
   background-color: var(--background);
   color: var(--text-primary);
-  /* Typography: Clean Sans Serif (handled by Tailwind 'font-sans' usually, or Inter) */
+  font-family: var(--font-inter), sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair), serif;
+}
+
+.font-serif-title {
+    font-family: var(--font-cormorant), serif;
+}
+
+.font-serif-subtitle {
+    font-family: var(--font-playfair), serif;
 }
 
 /* Utilities for "Slow" feel */
 .transition-slow {
   transition-duration: 300ms;
-  transition-timing-function: ease-out;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Scrollbar refinement */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);

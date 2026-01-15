@@ -1,23 +1,22 @@
 import { cn } from '@/lib/utils';
+import { Header } from '@/components/layout/header';
 
 interface PageShellProps {
     children: React.ReactNode;
     title: string;
+    subtitle?: string; // Added support for subtitle
     action?: React.ReactNode;
     className?: string;
 }
 
-export function PageShell({ children, title, action, className }: PageShellProps) {
+export function PageShell({ children, title, subtitle, action, className }: PageShellProps) {
     return (
-        <div className={cn("min-h-full flex flex-col p-8 md:p-12 space-y-8 animate-in fade-in duration-500", className)}>
-            <div className="flex items-center justify-between">
-                <h1 className="text-xs font-mono font-bold uppercase tracking-[0.3em] text-[var(--text-secondary)]">
-                    {title}
-                </h1>
-                {action && <div>{action}</div>}
-            </div>
+        <div className="flex flex-col h-full animate-in fade-in duration-500">
+            <Header title={title} subtitle={subtitle}>
+                {action}
+            </Header>
 
-            <div className="flex-1">
+            <div className={cn("flex-1 overflow-y-auto px-8 py-8 space-y-8", className)}>
                 {children}
             </div>
         </div>
