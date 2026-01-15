@@ -16,8 +16,10 @@ export function PageShell({ children, title, subtitle, action, className }: Page
                 {action}
             </Header>
 
-            <div className={cn("flex-1 overflow-y-auto px-8 py-8 space-y-8", className)}>
-                {children}
+            <div className={cn("flex-1 overflow-y-auto px-8 py-8", className)}>
+                <div className="max-w-7xl mx-auto space-y-8">
+                    {children}
+                </div>
             </div>
         </div>
     );

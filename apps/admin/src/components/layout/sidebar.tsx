@@ -25,7 +25,7 @@ export function Sidebar({ user }: SidebarProps) {
     const pathname = usePathname();
 
     return (
-        <aside className="w-[280px] h-full bg-[var(--background)] border-r border-[var(--border)] flex flex-col z-20 flex-shrink-0 relative">
+        <aside className="w-[260px] h-screen bg-[var(--background)] border-r border-[var(--border)] flex flex-col z-20 flex-shrink-0 fixed left-0 top-0">
             {/* Header / Logo */}
             <div className="h-[88px] flex items-center px-8 border-b border-[var(--border)]">
                 <div className="flex flex-col">
@@ -72,7 +72,7 @@ export function Sidebar({ user }: SidebarProps) {
 
                     <form action="/auth/signout" method="post">
                         <button className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors p-2 rounded-sm hover:bg-[var(--surface-hover)] group">
-                            <LogOut className="w-4 h-4 opacity-70 group-hover:opacity-100" />
+                            <LogOut className="w-5 h-5 opacity-70 group-hover:opacity-100" />
                         </button>
                     </form>
                 </div>
@@ -92,7 +92,7 @@ function NavItem({ href, icon: Icon, label, active }: any) {
                     : "text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] border-l-2 border-transparent"
             )}
         >
-            <Icon className={cn("w-4 h-4 flex-shrink-0 transition-colors", active ? "text-[var(--accent-copper)]" : "opacity-70 group-hover:opacity-100")} />
+            <Icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", active ? "text-[var(--accent-copper)]" : "opacity-70 group-hover:opacity-100")} />
             <span className={cn("text-sm tracking-wide transform transition-transform duration-300", active ? "font-medium translate-x-1" : "font-normal group-hover:translate-x-1")}>
                 {label}
             </span>

@@ -4,18 +4,32 @@
 
 :root {
   /* Palette: Deep Black / Atelier */
-  --background: #09090b; /* Very deep charcoal/black */
-  --surface: #121212;    /* Slightly lighter for cards/bars, elevated surfaces */
-  --surface-hover: #1c1c1f; /* Hover state for surfaces */
-  --border: #27272a;     /* Fine dark gray border */
-  
-  --text-primary: #f4f4f5;   /* Zinc 100 - High contrast text (off-white) */
-  --text-secondary: #a1a1aa; /* Zinc 400 - Muted text */
-  --text-muted: #52525b;     /* Zinc 600 - Very muted text */
-  
-  --accent-copper: #d4b483;  /* Muted Gold/Copper - Primary accent */
-  --accent-copper-dim: #9ca3af; /* Fallback or secondary accent if needed */
-  
+  --background: #09090b;
+  /* Very deep charcoal/black */
+  --surface: #121212;
+  /* Slightly lighter for cards/bars, elevated surfaces */
+  --surface-hover: #1c1c1f;
+  /* Hover state for surfaces */
+  --border: #27272a;
+  /* Fine dark gray border */
+
+  --text-primary: #f4f4f5;
+  /* Zinc 100 - High contrast text (off-white) */
+  --text-secondary: #a1a1aa;
+  /* Zinc 400 - Muted text */
+  --text-muted: #52525b;
+  /* Zinc 600 - Very muted text */
+
+  --accent-copper: #d4b483;
+  /* Muted Gold/Copper - Primary accent */
+  --accent-copper-dim: #9ca3af;
+  /* Fallback or secondary accent if needed */
+
+  --accent-coffee: #3E2723;
+  /* Deep Dark Coffee */
+  --accent-coffee-light: #5D4037;
+  /* Lighter Coffee for borders/hover */
+
   --foreground-rgb: 244, 244, 245;
 }
 
@@ -26,16 +40,21 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-playfair), serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-playfair), serif;
 }
 
 .font-serif-title {
-    font-family: var(--font-cormorant), serif;
+  font-family: var(--font-cormorant), serif;
 }
 
 .font-serif-subtitle {
-    font-family: var(--font-playfair), serif;
+  font-family: var(--font-playfair), serif;
 }
 
 /* Utilities for "Slow" feel */
@@ -49,13 +68,16 @@ h1, h2, h3, h4, h5, h6 {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--background);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
 }

@@ -40,16 +40,16 @@ export default function LoginPage() {
             {/* Ambient Background - Vignette & Warmth */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(62,39,35,0.15)_0%,rgba(9,9,11,1)_100%)] pointer-events-none" />
 
-            {/* Main Login Card */}
+            {/* Main Login Card - HARDENED: max-w-[420px], explicit overflow, rigid structure */}
             <div className={cn(
-                "relative z-10 w-full max-w-[440px] p-10 md:p-14",
-                "bg-[#121212] rounded-2xl",
+                "relative z-10 w-full max-w-[420px] p-10 md:p-12",
+                "bg-[#121212] rounded-xl overflow-hidden",
                 "border border-[#27272a] shadow-2xl shadow-black/80",
                 "flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-out"
             )}>
                 {/* Header */}
-                <div className="text-center mb-12 space-y-3">
-                    <h1 className="font-serif text-4xl text-[#f4f4f5] tracking-tight">
+                <div className="text-center mb-10 space-y-3">
+                    <h1 className="font-serif text-3xl text-[#f4f4f5] tracking-tight leading-tight">
                         Iniciar Sesión
                     </h1>
                     <p className="font-sans text-[10px] text-[#d4b483] uppercase tracking-[0.25em] font-medium opacity-90">
@@ -92,8 +92,8 @@ export default function LoginPage() {
                         type="submit"
                         disabled={loading}
                         className={cn(
-                            "w-full h-12 mt-8 rounded-lg relative overflow-hidden group",
-                            "bg-gradient-to-b from-[#3E2723] to-[#281815]", // Dark Coffee
+                            "w-full h-11 mt-6 rounded-lg relative overflow-hidden group",
+                            "bg-gradient-to-b from-[var(--accent-coffee)] to-[#281815]",
                             "border border-[#5D4037]/30 hover:border-[#8D6E63]/50",
                             "shadow-[0_4px_20px_-5px_rgba(62,39,35,0.5)] hover:shadow-[0_8px_30px_-5px_rgba(62,39,35,0.6)]",
                             "transition-all duration-700 ease-out",
@@ -138,9 +138,9 @@ function InputGroup({ id, type, label, value, onChange, placeholder }: any) {
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 className={cn(
-                    "w-full px-5 py-3.5",
+                    "w-full h-11 px-4", // HARDENED: explicit h-11
                     "bg-[#09090b] text-[#f4f4f5]",
-                    "border border-[#27272a] rounded-xl",
+                    "border border-[#27272a] rounded-lg",
                     "placeholder:text-[#52525b]/40 placeholder:text-xs placeholder:tracking-wide",
                     "focus:outline-none focus:border-[#5D4037] focus:ring-1 focus:ring-[#5D4037]/20",
                     "form-input transition-all duration-500 ease-out",
