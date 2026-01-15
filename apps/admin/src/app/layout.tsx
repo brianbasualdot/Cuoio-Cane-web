@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import { LayoutDashboard, ShoppingBag, Package, Users, FileText, Settings, LogOut } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,34 +19,15 @@ export default async function RootLayout({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
-    // If middleware misses, or checking inside layout for double safety on login page exclusion?
-    // Actually, middleware handles redirects.
-    // If this layout wraps login page, we have an issue.
-    // Ideally Login has its own layout or we conditionally render sidebar.
-  }
-
-  // Since App Router applies RootLayout to EVERYTHING including login unless we use Route Groups,
-  // we should check if we are on Login or just render Sidebar only if user exists?
-  // Easier: Use Route Groups: (auth)/login and (dashboard)/*
-
-  // But for speed without refactoring folder structure too much:
-  // We can just render children if no user (Login page logic), or rely on the Fact that Login Page is wrapped.
-
-  // WAIT: The Login Page is at /login.
-  // The Middleware ensures authorized users allow /.
-  // If I put Sidebar here, it shows on Login too unless I conditional check.
-
-  // Let's do a simple conditional.
-  const isLoginPage = !user; // Middleware handles redirection logic, so if we are here and !user, we must be on /login.
-
   return (
     <html lang="es">
-      <body className={`${inter.className} min-h-screen bg-neutral-950 text-neutral-400 flex selection:bg-neutral-800 selection:text-white`}>
+      <body className={`${inter.className} min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex selection:bg-[var(--accent-copper)] selection:text-black`}>
         {user && (
-          <aside className="w-64 bg-black border-r border-white/5 flex flex-col fixed h-full z-10">
-            <div className="h-16 flex items-center px-6 border-b border-white/5">
-              <span className="font-mono text-xs font-bold text-neutral-200 tracking-[0.2em] uppercase">CUOIO ADMIN</span>
+          <aside className="w-64 bg-[var(--surface)] border-r border-[var(--border)] flex flex-col fixed h-full z-10">
+            <div className="h-16 flex items-center px-6 border-b border-[var(--border)]">
+              <span className="font-mono text-[10px] font-bold text-[var(--text-secondary)] tracking-[0.25em] uppercase hover:text-[var(--accent-copper)] transition-colors duration-300 cursor-default">
+                CUOIO ADMIN
+              </span>
             </div>
             <nav className="flex-1 p-4 space-y-1">
               <NavLink href="/" icon={LayoutDashboard}>Dashboard</NavLink>
@@ -56,14 +36,14 @@ export default async function RootLayout({
               <NavLink href="/customers" icon={Users}>Clientes</NavLink>
               <NavLink href="/shipments" icon={Package}>Envíos</NavLink>
 
-              <div className="pt-8 pb-4 px-3 text-[10px] font-mono font-medium uppercase tracking-widest text-neutral-700">Sistema</div>
+              <div className="pt-8 pb-4 px-3 text-[9px] font-mono font-medium uppercase tracking-[0.2em] text-[var(--text-secondary)] opacity-50">Sistema</div>
               <NavLink href="/staff" icon={Settings}>Staff</NavLink>
               <NavLink href="/audit" icon={FileText}>Logs</NavLink>
             </nav>
-            <div className="p-4 border-t border-white/5">
+            <div className="p-4 border-t border-[var(--border)]">
               <form action="/auth/signout" method="post">
-                <button className="flex items-center gap-3 px-3 py-2 text-xs font-medium uppercase tracking-wider text-neutral-500 hover:text-neutral-300 transition-colors w-full text-left">
-                  <LogOut className="w-4 h-4" />
+                <button className="flex items-center gap-3 px-3 py-2 text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors w-full text-left group">
+                  <LogOut className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
                   Salir
                 </button>
               </form>
@@ -81,8 +61,11 @@ export default async function RootLayout({
 
 function NavLink({ href, icon: Icon, children }: any) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm text-neutral-400 hover:bg-white/5 hover:text-neutral-200 transition-all border border-transparent hover:border-white/5">
-      <Icon className="w-4 h-4 opacity-70" />
+    <Link
+      href={href}
+      className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-sm text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] transition-all duration-300"
+    >
+      <Icon className="w-4 h-4 opacity-60" />
       {children}
     </Link>
   );

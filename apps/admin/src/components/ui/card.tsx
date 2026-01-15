@@ -5,7 +5,7 @@ export function Card({ children, className }: { children: ReactNode; className?:
     return (
         <div
             className={cn(
-                'rounded-2xl border border-neutral-800 bg-neutral-950 p-6 shadow-sm',
+                'rounded-lg border border-[var(--border)] bg-[var(--surface)] p-6', // Removed shadow, standardized props
                 className
             )}
         >

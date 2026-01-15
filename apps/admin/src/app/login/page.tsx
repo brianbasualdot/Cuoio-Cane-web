@@ -3,7 +3,6 @@
 import { createBrowserClient } from '@supabase/ssr';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock } from 'lucide-react';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -30,48 +29,50 @@ export default function LoginPage() {
             setLoading(false);
         } else {
             router.push('/');
-            router.refresh(); // Refresh middleware check
+            router.refresh();
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-sm border border-gray-100">
-                <div className="flex flex-col items-center mb-8">
-                    <div className="p-3 bg-gray-900 rounded-full mb-4">
-                        <Lock className="w-6 h-6 text-white" />
-                    </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900">Cuoio Cane Admin</h1>
-                    <p className="text-sm text-gray-500 mt-2">Acceso exclusivo para personal autorizado</p>
+        <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+            <div className="w-full max-w-[400px] p-12 bg-[var(--background)] rounded-sm border border-[var(--border)]">
+                <div className="flex flex-col items-center mb-12">
+                    <span className="font-mono text-[10px] font-bold text-[var(--accent-copper)] tracking-[0.25em] uppercase mb-6">
+                        CUOIO CANE
+                    </span>
+                    <h1 className="text-xl font-medium tracking-wide text-[var(--text-primary)]">Admin Access</h1>
+                    <p className="text-xs text-[var(--text-secondary)] mt-2 font-mono tracking-wide opacity-60">Atelier Control Panel</p>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <form onSubmit={handleLogin} className="space-y-6">
+                    <div className="space-y-1">
+                        <label className="block text-[10px] font-mono uppercase tracking-widest text-[var(--text-secondary)]">Email</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
+                            className="w-full px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-sm text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)/30] focus:outline-none focus:border-[var(--accent-copper)] transition-colors duration-300"
+                            placeholder="admin@cuoiocane.com"
                             required
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                    <div className="space-y-1">
+                        <label className="block text-[10px] font-mono uppercase tracking-widest text-[var(--text-secondary)]">Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900"
+                            className="w-full px-4 py-3 bg-[var(--surface)] border border-[var(--border)] rounded-sm text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)/30] focus:outline-none focus:border-[var(--accent-copper)] transition-colors duration-300"
+                            placeholder="••••••••"
                             required
                         />
                     </div>
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-2 bg-gray-900 text-white font-medium rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50"
+                        className="w-full py-3 bg-[var(--surface)] border border-[var(--border)] text-[var(--text-primary)] text-xs font-mono uppercase tracking-widest rounded-sm hover:bg-[var(--surface-hover)] hover:border-[var(--text-secondary)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
                     >
-                        {loading ? 'Ingresando...' : 'Iniciar Sesión'}
+                        {loading ? 'Authenticating...' : 'Enter Atelier'}
                     </button>
                 </form>
             </div>
