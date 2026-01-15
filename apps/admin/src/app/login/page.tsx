@@ -3,8 +3,9 @@
 import { createBrowserClient } from '@supabase/ssr';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
+
+// NOTE: We don't import ANY legacy components. This is pure, strict output.
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ export default function LoginPage() {
         });
 
         if (error) {
-            alert('Error de acceso: ' + error.message);
+            alert('Error: ' + error.message);
             setLoading(false);
         } else {
             router.push('/');
@@ -36,119 +37,93 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#09090b]">
-            {/* Ambient Background - Vignette & Warmth */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(62,39,35,0.15)_0%,rgba(9,9,11,1)_100%)] pointer-events-none" />
+        // CONTAINER: Full Screen, Centered, No Scroll
+        // bg-[var(--background)] defined in globals, but explicit here for safety
+        <div className="w-full h-full flex items-center justify-center relative bg-[var(--background)]">
 
-            {/* Main Login Card - HARDENED: max-w-[420px], explicit overflow, rigid structure */}
-            <div className={cn(
-                "relative z-10 w-full max-w-[420px] p-10 md:p-12",
-                "bg-[#121212] rounded-xl overflow-hidden",
-                "border border-[#27272a] shadow-2xl shadow-black/80",
-                "flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-out"
-            )}>
-                {/* Header */}
-                <div className="text-center mb-10 space-y-3">
-                    <h1 className="font-serif text-3xl text-[#f4f4f5] tracking-tight leading-tight">
+            {/* AMBIENT LIGHT: Static radial, no animation */}
+            <div className="absolute inset-0 pointer-events-none"
+                style={{ background: 'radial-gradient(circle at center, rgba(62, 39, 35, 0.15) 0%, transparent 60%)' }}
+            />
+
+            {/* CARD: Rigid Dimensions (420px), Padding (40px) */}
+            <div className="relative z-10 w-full max-w-[420px] bg-[var(--surface)] border border-[var(--border)] rounded-xl p-10 shadow-2xl">
+
+                {/* HEADER */}
+                <div className="flex flex-col items-center mb-10 text-center">
+                    <h1 className="font-serif-title text-3xl text-[var(--text-primary)] leading-tight tracking-tight mb-2">
                         Iniciar Sesión
                     </h1>
-                    <p className="font-sans text-[10px] text-[#d4b483] uppercase tracking-[0.25em] font-medium opacity-90">
-                        Panel de administración Cuoio Cane
-                    </p>
+                    <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-[var(--text-secondary)] font-medium">
+                        Cuoio Cane Admin
+                    </span>
                 </div>
 
-                {/* Form */}
-                <form onSubmit={handleLogin} className="space-y-6">
+                {/* FORM */}
+                <form onSubmit={handleLogin} className="flex flex-col gap-6">
+
+                    {/* INPUTS GROUP */}
                     <div className="space-y-4">
-                        <InputGroup
-                            id="email"
-                            type="email"
-                            label="Correo Electrónico"
-                            value={email}
-                            onChange={setEmail}
-                            placeholder="nombre@cuoiocane.com"
-                        />
-                        <InputGroup
-                            id="password"
-                            type="password"
-                            label="Contraseña"
-                            value={password}
-                            onChange={setPassword}
-                            placeholder="••••••••"
-                        />
+                        <div className="space-y-1.5">
+                            <label className="block text-[11px] font-sans font-medium text-[var(--text-secondary)] ml-1">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                disabled={loading}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full h-11 px-4 rounded-lg bg-[var(--background)] border border-[var(--border)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent-coffee-light)] transition-colors"
+                                placeholder="usuario@cuoiocane.com"
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="block text-[11px] font-sans font-medium text-[var(--text-secondary)] ml-1">
+                                Contraseña
+                            </label>
+                            <input
+                                type="password"
+                                disabled={loading}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full h-11 px-4 rounded-lg bg-[var(--background)] border border-[var(--border)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent-coffee-light)] transition-colors"
+                                placeholder="••••••••"
+                            />
+                        </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2">
-                        <label className="flex items-center gap-2 cursor-pointer group">
-                            <div className="w-3.5 h-3.5 rounded border border-[#52525b] group-hover:border-[#d4b483] transition-colors relative" />
-                            <span className="text-[10px] uppercase tracking-wider text-[#a1a1aa] font-sans">Recordarme</span>
+                    {/* ACTIONS (Remember / Forgot) */}
+                    <div className="flex items-center justify-between px-1">
+                        <label className="flex items-center gap-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity">
+                            <input type="checkbox" className="w-3.5 h-3.5 rounded border border-[var(--border)] bg-transparent checked:bg-[var(--accent-coffee)] appearance-none cursor-pointer" />
+                            <span className="text-[10px] font-sans text-[var(--text-secondary)] uppercase tracking-wider">Recordarme</span>
                         </label>
-                        <button type="button" className="text-[10px] uppercase tracking-wider text-[#a1a1aa] hover:text-[#d4b483] font-sans transition-colors">
-                            ¿Olvidaste tu contraseña?
+                        <button type="button" className="text-[10px] font-sans text-[var(--text-secondary)] uppercase tracking-wider hover:text-[var(--accent-copper)] transition-colors">
+                            ¿Olvidaste clave?
                         </button>
                     </div>
 
+                    {/* BUTTON: Dark Coffee Gradient */}
                     <button
                         type="submit"
                         disabled={loading}
-                        className={cn(
-                            "w-full h-11 mt-6 rounded-lg relative overflow-hidden group",
-                            "bg-gradient-to-b from-[var(--accent-coffee)] to-[#281815]",
-                            "border border-[#5D4037]/30 hover:border-[#8D6E63]/50",
-                            "shadow-[0_4px_20px_-5px_rgba(62,39,35,0.5)] hover:shadow-[0_8px_30px_-5px_rgba(62,39,35,0.6)]",
-                            "transition-all duration-700 ease-out",
-                            "flex items-center justify-center gap-2"
-                        )}
+                        className="w-full h-12 mt-2 rounded-lg bg-gradient-to-b from-[var(--accent-coffee)] to-[#251815] border border-[#5D4037]/20 text-[rgb(240,230,225)] text-xs font-sans font-medium uppercase tracking-[0.2em] hover:brightness-110 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-lg shadow-black/40"
                     >
-                        {/* Inner Light Reflection (Top) */}
-                        <div className="absolute inset-x-0 top-0 h-[1px] bg-white/10 opacity-50 group-hover:opacity-100 transition-opacity" />
-
-                        <span className={cn(
-                            "font-sans text-xs font-medium uppercase tracking-[0.2em] text-[#EFEBE9]",
-                            "transition-all duration-500 group-hover:tracking-[0.25em]"
-                        )}>
-                            {loading ? 'Ingresando...' : 'Entrar al Panel'}
-                        </span>
-
-                        {loading && <Loader2 className="w-3 h-3 animate-spin text-[#d4b483]" />}
+                        {loading && <Loader2 className="w-3 h-3 animate-spin" />}
+                        {loading ? 'Verificando...' : 'Entrar al Panel'}
                     </button>
+
                 </form>
             </div>
 
-            {/* Footer */}
-            <div className="absolute bottom-8 left-0 right-0 text-center">
-                <p className="text-[10px] text-[#52525b] font-mono tracking-widest opacity-50 uppercase">
-                    © 2026 Cuoio Cane Atelier. Acceso Restringido.
+            {/* FOOTER */}
+            <div className="absolute bottom-6 opacity-40">
+                <p className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest uppercase">
+                    © 2026 Atelier System v2.0
                 </p>
             </div>
-        </div>
-    );
-}
 
-// Subcomponent for Cleaner Inputs
-function InputGroup({ id, type, label, value, onChange, placeholder }: any) {
-    return (
-        <div className="space-y-1.5 group">
-            <label htmlFor={id} className="block text-[10px] font-playfair font-medium text-[#a1a1aa] ml-1 opacity-80 group-focus-within:text-[#d4b483] group-focus-within:opacity-100 transition-colors duration-500">
-                {label}
-            </label>
-            <input
-                id={id}
-                type={type}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                className={cn(
-                    "w-full h-11 px-4", // HARDENED: explicit h-11
-                    "bg-[#09090b] text-[#f4f4f5]",
-                    "border border-[#27272a] rounded-lg",
-                    "placeholder:text-[#52525b]/40 placeholder:text-xs placeholder:tracking-wide",
-                    "focus:outline-none focus:border-[#5D4037] focus:ring-1 focus:ring-[#5D4037]/20",
-                    "form-input transition-all duration-500 ease-out",
-                    "font-sans text-sm tracking-wide"
-                )}
-                placeholder={placeholder}
-                required
-            />
         </div>
     );
 }

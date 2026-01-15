@@ -1,56 +1,57 @@
 'use client';
 
-import { MoreHorizontal } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { cn } from "@/lib/utils";
 
-// Mock data to match "Recent Activity" reference
-const recentOrders = [
-    { id: '#CC-1024', customer: 'Andrea Rossi', product: 'Collar Cuero Trenzado (Negro)', date: 'Hace 2 min', status: 'Pagado', amount: '$150.00' },
-    { id: '#CC-1023', customer: 'Isabella Moretti', product: 'Correa Ajustable (Cobre)', date: 'Hace 45 min', status: 'Enviado', amount: '$85.00' },
-    { id: '#CC-1022', customer: 'Luca Bianchi', product: 'Kit Paseo Premium', date: 'Hace 2 horas', status: 'Entregado', amount: '$210.00' },
-    { id: '#CC-1021', customer: 'Sofia Ferrari', product: 'Collar Personalizado', date: 'Ayer', status: 'Pagado', amount: '$120.00' },
-    { id: '#CC-1020', customer: 'Marco Conti', product: 'Pack Accesorios', date: 'Ayer', status: 'Pendiente', amount: '$95.00' },
+// Mock Data
+const RECENT_ORDERS = [
+    { id: 'ORD-001', customer: 'Sofía Martinez', product: 'Bolso Tote Cuero', amount: '$145.000', status: 'completed' },
+    { id: 'ORD-002', customer: 'Lucas Perez', product: 'Cinturón Clásico', amount: '$42.000', status: 'pending' },
+    { id: 'ORD-003', customer: 'Ana Garcia', product: 'Billetera Doble', amount: '$56.000', status: 'processing' },
+    { id: 'ORD-004', customer: 'Miguel Angel', product: 'Morral Canvas', amount: '$110.000', status: 'completed' },
 ];
 
 export function RecentOrders() {
     return (
-        <div className="h-full bg-[var(--surface)] border border-[var(--border)] rounded-sm p-6 flex flex-col">
-            <div className="flex items-center justify-between mb-6">
-                <h3 className="text-[11px] font-sans font-medium uppercase tracking-[0.2em] text-[var(--text-muted)]">Actividad Reciente</h3>
-                <Link href="/orders" className="text-xs text-[var(--accent-copper)] hover:text-[var(--text-primary)] transition-colors">Ver todo</Link>
+        <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg overflow-hidden flex flex-col h-full min-h-[400px]">
+            {/* Header */}
+            <div className="px-6 py-5 border-b border-[var(--border)] flex justify-between items-center">
+                <h3 className="text-xs font-sans font-medium uppercase tracking-[0.2em] text-[var(--text-secondary)]">
+                    Actividad Reciente
+                </h3>
+                <button className="text-[10px] text-[var(--accent-copper)] hover:text-[#e4c493] uppercase tracking-wider font-medium transition-colors">
+                    Ver Todo
+                </button>
             </div>
 
-            <div className="overflow-x-auto">
-                <table className="w-full">
+            {/* Table Content */}
+            <div className="flex-1 overflow-auto">
+                <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="border-b border-[var(--border)]">
-                            <th className="text-left pb-3 text-[10px] uppercase tracking-wider text-[var(--text-secondary)] font-medium">Pedido</th>
-                            <th className="text-left pb-3 text-[10px] uppercase tracking-wider text-[var(--text-secondary)] font-medium">Cliente</th>
-                            <th className="text-right pb-3 text-[10px] uppercase tracking-wider text-[var(--text-secondary)] font-medium">Estado</th>
-                            <th className="text-right pb-3 text-[10px] uppercase tracking-wider text-[var(--text-secondary)] font-medium">Monto</th>
+                        <tr className="bg-[var(--surface-hover)]/30 border-b border-[var(--border)]">
+                            <th className="px-6 py-3 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] w-[100px]">ID</th>
+                            <th className="px-6 py-3 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)]">Cliente</th>
+                            <th className="px-6 py-3 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] hidden md:table-cell">Producto</th>
+                            <th className="px-6 py-3 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)]">Estado</th>
+                            <th className="px-6 py-3 text-[10px] font-medium uppercase tracking-wider text-[var(--text-muted)] text-right">Monto</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-[var(--border)]">
-                        {recentOrders.map((order) => (
-                            <tr key={order.id} className="group cursor-pointer hover:bg-[var(--surface-hover)] transition-colors">
-                                <td className="py-3 pr-4">
-                                    <div className="flex flex-col">
-                                        <span className="text-xs font-medium text-[var(--text-primary)] font-mono">{order.id}</span>
-                                        <span className="text-[10px] text-[var(--text-secondary)] truncate max-w-[120px]">{order.product}</span>
-                                    </div>
+                        {RECENT_ORDERS.map((order) => (
+                            <tr key={order.id} className="group hover:bg-[var(--surface-hover)] transition-colors">
+                                <td className="px-6 py-4 text-xs font-mono text-[var(--text-secondary)]">
+                                    {order.id}
                                 </td>
-                                <td className="py-3 pr-4">
-                                    <div className="flex flex-col">
-                                        <span className="text-xs text-[var(--text-primary)]">{order.customer}</span>
-                                        <span className="text-[10px] text-[var(--text-muted)]">{order.date}</span>
-                                    </div>
+                                <td className="px-6 py-4">
+                                    <span className="text-sm text-[var(--text-primary)] font-medium block">{order.customer}</span>
                                 </td>
-                                <td className="py-3 text-right">
+                                <td className="px-6 py-4 text-sm text-[var(--text-secondary)] hidden md:table-cell">
+                                    {order.product}
+                                </td>
+                                <td className="px-6 py-4">
                                     <StatusBadge status={order.status} />
                                 </td>
-                                <td className="py-3 pl-4 text-right">
-                                    <span className="text-xs font-medium text-[var(--text-primary)] font-mono">{order.amount}</span>
+                                <td className="px-6 py-4 text-sm font-mono text-[var(--text-primary)] text-right">
+                                    {order.amount}
                                 </td>
                             </tr>
                         ))}
@@ -62,18 +63,24 @@ export function RecentOrders() {
 }
 
 function StatusBadge({ status }: { status: string }) {
-    const styles = {
-        'Pagado': 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
-        'Enviado': 'text-blue-400 bg-blue-400/10 border-blue-400/20',
-        'Entregado': 'text-[var(--text-secondary)] bg-[var(--border)] border-transparent',
-        'Pendiente': 'text-amber-400 bg-amber-400/10 border-amber-400/20',
+    const styles: Record<string, string> = {
+        completed: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
+        pending: "text-amber-500 bg-amber-500/10 border-amber-500/20",
+        processing: "text-blue-500 bg-blue-500/10 border-blue-500/20",
     };
 
-    const style = styles[status as keyof typeof styles] || styles['Entregado'];
+    const labels: Record<string, string> = {
+        completed: "Completado",
+        pending: "Pendiente",
+        processing: "Procesando",
+    }
 
     return (
-        <span className={cn("inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-medium border uppercase tracking-wider", style)}>
-            {status}
+        <span className={cn(
+            "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide border",
+            styles[status] || styles.pending
+        )}>
+            {labels[status] || status}
         </span>
     );
 }

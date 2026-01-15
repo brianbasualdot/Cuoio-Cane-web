@@ -3,74 +3,71 @@
 @tailwind utilities;
 
 :root {
-  /* Palette: Deep Black / Atelier */
+  /* ========================================= */
+  /* CUOIO CANE ATELIER PALETTE (STRICT)       */
+  /* ========================================= */
+
+  /* BACKGROUNDS */
   --background: #09090b;
-  /* Very deep charcoal/black */
+  /* Deepest Charcoal/Black - Main Canvas */
   --surface: #121212;
-  /* Slightly lighter for cards/bars, elevated surfaces */
-  --surface-hover: #1c1c1f;
-  /* Hover state for surfaces */
+  /* Elevated Black - Cards, Sidebar */
+  --surface-hover: #18181b;
+  /* Subtle feedback */
+
+  /* BORDERS */
   --border: #27272a;
-  /* Fine dark gray border */
+  /* Zinc 800 - Fine structural lines */
+  --border-light: #3f3f46;
+  /* Slightly visible border */
 
+  /* TEXT ELEMENTAL */
   --text-primary: #f4f4f5;
-  /* Zinc 100 - High contrast text (off-white) */
+  /* Zinc 100 - Main Content (Not pure white) */
   --text-secondary: #a1a1aa;
-  /* Zinc 400 - Muted text */
+  /* Zinc 400 - Labels, Metadata */
   --text-muted: #52525b;
-  /* Zinc 600 - Very muted text */
+  /* Zinc 600 - Disabled / Background text */
 
-  --accent-copper: #d4b483;
-  /* Muted Gold/Copper - Primary accent */
-  --accent-copper-dim: #9ca3af;
-  /* Fallback or secondary accent if needed */
-
+  /* ACCENTS (ATELIER LEATHER) */
   --accent-coffee: #3E2723;
-  /* Deep Dark Coffee */
+  /* Deep Coffee - Primary Brand Action */
   --accent-coffee-light: #5D4037;
-  /* Lighter Coffee for borders/hover */
+  /* Hover / Border Accent */
+  --accent-copper: #d4b483;
+  /* Muted Metallic - Highlights/Status */
 
-  --foreground-rgb: 244, 244, 245;
+  /* FONTS (Referenced in Tailwind Config) */
+  /* --font-inter (UI) */
+  /* --font-cormorant (Titles) */
+  /* --font-playfair (Subtitles/Labels) */
 }
 
+/* GLOBAL RESET & HARDENING */
+html,
 body {
+  height: 100%;
+  width: 100%;
   background-color: var(--background);
   color: var(--text-primary);
-  font-family: var(--font-inter), sans-serif;
+  /* Prevent bounce effect on Mac */
+  overscroll-behavior: none;
+}
+
+/* TEXT SMOOTHING */
+body {
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-playfair), serif;
-}
-
-.font-serif-title {
-  font-family: var(--font-cormorant), serif;
-}
-
-.font-serif-subtitle {
-  font-family: var(--font-playfair), serif;
-}
-
-/* Utilities for "Slow" feel */
-.transition-slow {
-  transition-duration: 300ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Scrollbar refinement */
+/* SCROLLBARS (Minimalist) */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -79,5 +76,20 @@ h6 {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: var(--text-muted);
+}
+
+/* UTILITIES */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* FORM RESET (Base Input Styles) */
+input,
+textarea,
+select {
+  background: transparent;
+  outline: none;
 }

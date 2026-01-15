@@ -3,6 +3,7 @@ import { Inter, Cormorant_Garamond, Playfair_Display } from 'next/font/google';
 import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/layout/sidebar';
 
+// FONT CONFIGURATION
 const inter = Inter({
     subsets: ['latin'],
     variable: '--font-inter',
@@ -22,11 +23,13 @@ const playfair = Playfair_Display({
     display: 'swap',
 });
 
+// METADATA
 export const metadata = {
     title: 'Cuoio Cane Admin',
-    description: 'Atelier Management',
+    description: 'Atelier Management System',
 };
 
+// ROOT LAYOUT (The Hardened Shell)
 export default async function RootLayout({
     children,
 }: {
@@ -37,19 +40,33 @@ export default async function RootLayout({
 
     return (
         <html lang="es" className={`${inter.variable} ${cormorant.variable} ${playfair.variable}`}>
-            <body className="h-screen bg-[var(--background)] text-[var(--text-primary)] flex overflow-hidden selection:bg-[var(--accent-copper)] selection:text-black font-sans">
+            <body className="h-screen w-screen overflow-hidden bg-[var(--background)] font-sans antialiased selection:bg-[var(--accent-coffee)] selection:text-white">
+
+                {/* 
+                   LAYOUT STRATEGY:
+                   - If User: Flex Container [Sidebar (Fixed) | Main (Auto)]
+                   - If No User: Full Screen Container [Centered Login]
+                */}
+
                 {user ? (
-                    <>
-                        <Sidebar user={user} />
-                        <main className="flex-1 h-full overflow-y-auto bg-[var(--background)] relative flex flex-col">
+                    <div className="flex h-full w-full">
+                        {/* Sidebar: Fixed Width, Non-Shrinkable */}
+                        <div className="flex-shrink-0">
+                            <Sidebar user={user} />
+                        </div>
+
+                        {/* Main Content: Grows to fill, scrolls internally */}
+                        <main className="flex-1 h-full overflow-y-auto overflow-x-hidden relative bg-[var(--background)]">
                             {children}
                         </main>
-                    </>
+                    </div>
                 ) : (
-                    <main className="flex-1 h-full overflow-y-auto w-full">
+                    // Login / Public Layout
+                    <main className="h-full w-full flex items-center justify-center bg-[var(--background)]">
                         {children}
                     </main>
                 )}
+
             </body>
         </html>
     );

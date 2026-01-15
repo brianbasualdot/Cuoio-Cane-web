@@ -12,8 +12,7 @@ import {
     Layers,
     BarChart,
     Tag,
-    Share2,
-    Box
+    Share2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,87 +24,97 @@ export function Sidebar({ user }: SidebarProps) {
     const pathname = usePathname();
 
     return (
-        <aside className="w-[260px] h-screen bg-[var(--background)] border-r border-[var(--border)] flex flex-col z-20 flex-shrink-0 fixed left-0 top-0">
-            {/* Header / Logo */}
-            <div className="h-[88px] flex items-center px-8 border-b border-[var(--border)]">
-                <div className="flex flex-col">
-                    <span className="font-display text-2xl font-bold text-[var(--text-primary)] tracking-tight leading-none">Cuoio Cane</span>
-                    <span className="font-sans text-[10px] text-[var(--text-secondary)] uppercase tracking-[0.3em] mt-1 pl-0.5">Atelier Admin</span>
-                </div>
+        // CONTAINER: Rigid 260px Width, Full Height, Fixed Border
+        <aside className="w-[260px] h-full flex flex-col bg-[var(--surface)] border-r border-[var(--border)] text-[var(--text-secondary)]">
+
+            {/* HEADER: Rigid Height (80px), Padding */}
+            <div className="h-20 flex flex-col justify-center px-6 border-b border-[var(--border)] shrink-0">
+                <span className="font-serif-title text-xl text-[var(--text-primary)] tracking-tight">
+                    Cuoio Cane
+                </span>
+                <span className="font-sans text-[10px] uppercase tracking-[0.25em] opacity-60 mt-0.5">
+                    Atelier Admin
+                </span>
             </div>
 
-            {/* Navigation */}
-            <div className="flex-1 overflow-y-auto py-8 px-4 space-y-10 scrollbar-thin">
+            {/* SCROLLABLE NAV: Flex Grow, Safe Overflow */}
+            <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-8">
 
-                {/* Principal Group */}
+                {/* GROUP 1: Principal */}
                 <div className="space-y-1">
-                    <SectionLabel>Principal</SectionLabel>
+                    <div className="px-3 mb-2">
+                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--accent-copper)] opacity-80">
+                            Principal
+                        </span>
+                    </div>
                     <NavItem href="/" icon={LayoutDashboard} label="Dashboard" active={pathname === '/'} />
                     <NavItem href="/orders" icon={ShoppingBag} label="Pedidos" active={pathname.startsWith('/orders')} />
                     <NavItem href="/products" icon={Package} label="Productos" active={pathname.startsWith('/products')} />
-                    <NavItem href="/customers" icon={Users} label="Clientes" active={pathname === '/customers'} />
+                    <NavItem href="/customers" icon={Users} label="Clientes" active={pathname.startsWith('/customers')} />
                 </div>
 
-                {/* Gestion Group */}
+                {/* GROUP 2: Gestión */}
                 <div className="space-y-1">
-                    <SectionLabel>Gestión</SectionLabel>
-                    <NavItem href="/categories" icon={Layers} label="Categorías" active={pathname === '/categories'} />
-                    <NavItem href="/discounts" icon={Tag} label="Descuentos" active={pathname === '/discounts'} />
-                    <NavItem href="/reports" icon={BarChart} label="Reportes" active={pathname === '/reports'} />
-                </div>
-
-                {/* Sistema Group */}
-                <div className="space-y-1">
-                    <SectionLabel>Sistema</SectionLabel>
-                    <NavItem href="/integrations" icon={Share2} label="Integraciones" active={pathname === '/integrations'} />
-                    <NavItem href="/settings" icon={Settings} label="Configuración" active={pathname === '/settings'} />
-                </div>
-            </div>
-
-            {/* Footer / User */}
-            <div className="p-6 border-t border-[var(--border)] mt-auto bg-[var(--surface)]">
-                <div className="flex items-center justify-between">
-                    <div className="overflow-hidden">
-                        <p className="font-serif text-sm text-[var(--text-primary)] truncate tracking-wide">{user.user_metadata?.first_name || user.email?.split('@')[0] || 'Atelier User'}</p>
-                        <p className="text-[10px] text-[var(--accent-copper)] uppercase tracking-wider mt-0.5 font-medium">Administrator</p>
+                    <div className="px-3 mb-2">
+                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--accent-copper)] opacity-80">
+                            Gestión
+                        </span>
                     </div>
+                    <NavItem href="/categories" icon={Layers} label="Categorías" active={pathname.startsWith('/categories')} />
+                    <NavItem href="/discounts" icon={Tag} label="Descuentos" active={pathname.startsWith('/discounts')} />
+                    <NavItem href="/reports" icon={BarChart} label="Reportes" active={pathname.startsWith('/reports')} />
+                </div>
 
+                {/* GROUP 3: Sistema */}
+                <div className="space-y-1">
+                    <div className="px-3 mb-2">
+                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--accent-copper)] opacity-80">
+                            Sistema
+                        </span>
+                    </div>
+                    <NavItem href="/integrations" icon={Share2} label="Integraciones" active={pathname.startsWith('/integrations')} />
+                    <NavItem href="/settings" icon={Settings} label="Configuración" active={pathname.startsWith('/settings')} />
+                </div>
+
+            </nav>
+
+            {/* FOOTER: User Profile, Rigid Height */}
+            <div className="p-5 border-t border-[var(--border)] bg-[var(--background)] shrink-0">
+                <div className="flex items-center justify-between">
+                    <div className="flex flex-col overflow-hidden mr-2">
+                        <span className="font-medium text-xs text-[var(--text-primary)] truncate">
+                            {user?.email?.split('@')[0] || 'Administrator'}
+                        </span>
+                        <span className="text-[10px] uppercase tracking-wider opacity-60">
+                            Sesión Activa
+                        </span>
+                    </div>
                     <form action="/auth/signout" method="post">
-                        <button className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors p-2 rounded-sm hover:bg-[var(--surface-hover)] group">
-                            <LogOut className="w-5 h-5 opacity-70 group-hover:opacity-100" />
+                        <button className="p-2 rounded hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] transition-colors">
+                            <LogOut className="w-4 h-4" />
                         </button>
                     </form>
                 </div>
             </div>
+
         </aside>
     );
 }
 
+// NAV ITEM SUBCOMPONENT
 function NavItem({ href, icon: Icon, label, active }: any) {
     return (
         <Link
             href={href}
             className={cn(
-                "flex items-center gap-3 px-4 py-2.5 rounded-sm transition-all duration-300 group relative font-sans",
+                "flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium tracking-wide transition-all duration-200",
                 active
-                    ? "bg-[var(--surface)] text-[var(--text-primary)] border-l-2 border-[var(--accent-copper)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] border-l-2 border-transparent"
+                    ? "bg-[var(--background)] text-[var(--text-primary)] border border-[var(--border)] shadow-sm"
+                    : "hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] border border-transparent"
             )}
         >
-            <Icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", active ? "text-[var(--accent-copper)]" : "opacity-70 group-hover:opacity-100")} />
-            <span className={cn("text-sm tracking-wide transform transition-transform duration-300", active ? "font-medium translate-x-1" : "font-normal group-hover:translate-x-1")}>
-                {label}
-            </span>
+            <Icon className={cn("w-4 h-4", active ? "text-[var(--accent-copper)]" : "opacity-70")} />
+            <span>{label}</span>
         </Link>
-    );
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="px-4 mt-4 mb-2">
-            <h3 className="text-[11px] font-sans font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] select-none">
-                {children}
-            </h3>
-        </div>
     );
 }
