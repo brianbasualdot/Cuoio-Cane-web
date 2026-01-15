@@ -20,7 +20,6 @@ export default async function Dashboard() {
   // For MVP Dashboard, let's just show Counts.
 
   return (
-  return (
     <div className="p-8 md:p-12 space-y-12">
       <div className="flex items-center justify-between">
         <h1 className="text-xs font-mono font-bold uppercase tracking-[0.3em] text-neutral-500">Panel de Control</h1>
@@ -63,8 +62,8 @@ export default async function Dashboard() {
                       {order.status === 'completed' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50"></span>}
                       {order.status === 'pending' && <span className="w-1.5 h-1.5 rounded-full bg-amber-500/50"></span>}
                       <span className={`text-xs font-mono uppercase tracking-wider ${order.status === 'completed' ? 'text-emerald-500/80' :
-                          order.status === 'pending' ? 'text-amber-500/80' :
-                            'text-neutral-600'
+                        order.status === 'pending' ? 'text-amber-500/80' :
+                          'text-neutral-600'
                         }`}>
                         {order.status}
                       </span>

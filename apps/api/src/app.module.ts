@@ -12,6 +12,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
         ConfigModule.forRoot({
             validate,
             isGlobal: true,
+            ignoreEnvFile: process.env.NODE_ENV === 'production',
         }),
         SupabaseModule,
         ProductsModule,
