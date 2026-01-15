@@ -10,7 +10,6 @@ import {
     Package,
     Users,
     Settings,
-    FileText,
     LogOut,
     ChevronLeft,
     ChevronRight,
@@ -28,12 +27,18 @@ interface SidebarProps {
 export function Sidebar({ user }: SidebarProps) {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const pathname = usePathname();
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         const savedState = localStorage.getItem('sidebarCollapsed');
         if (savedState) {
             setIsCollapsed(JSON.parse(savedState));
         }
+
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     const toggleSidebar = () => {
@@ -42,38 +47,40 @@ export function Sidebar({ user }: SidebarProps) {
         localStorage.setItem('sidebarCollapsed', JSON.stringify(newState));
     };
 
+    if (isMobile) return null;
+
     return (
         <motion.aside
             initial={false}
-            animate={{ width: isCollapsed ? 80 : 256 }}
-            transition={{ duration: 0.3, type: "spring", stiffness: 200, damping: 25 }}
-            className="h-screen sticky top-0 bg-[var(--surface)] border-r border-[var(--border)] flex flex-col z-20 flex-shrink-0"
+            animate={{ width: isCollapsed ? 88 : 280 }}
+            transition={{ duration: 0.4, type: "spring", stiffness: 150, damping: 20 }}
+            className="h-full bg-[var(--surface)] border-r border-[var(--border)] flex flex-col z-20 flex-shrink-0 relative group/sidebar"
         >
             {/* Header */}
-            <div className="h-16 flex items-center justify-between px-5 border-b border-[var(--border)]">
+            <div className={cn("h-20 flex items-center px-6 border-b border-[var(--border)]", isCollapsed ? "justify-center" : "justify-between")}>
                 <AnimatePresence mode="popLayout">
                     {!isCollapsed && (
                         <motion.span
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -10 }}
-                            className="font-mono text-[10px] font-bold text-[var(--accent-copper)] tracking-[0.25em] uppercase whitespace-nowrap"
+                            className="font-mono text-[10px] font-bold text-[var(--accent-copper)] tracking-[0.3em] uppercase whitespace-nowrap"
                         >
                             CUOIO ATELIER
                         </motion.span>
                     )}
                 </AnimatePresence>
                 {isCollapsed && (
-                    <span className="font-mono text-[10px] font-bold text-[var(--accent-copper)] mx-auto">CA</span>
+                    <span className="font-mono text-[10px] font-bold text-[var(--accent-copper)]">CA</span>
                 )}
             </div>
 
             {/* Navigation */}
-            <div className="flex-1 overflow-y-auto py-6 space-y-8 scrollbar-thin">
+            <div className="flex-1 overflow-y-auto py-8 space-y-10 scrollbar-thin overflow-x-hidden">
 
                 {/* Principal Group */}
-                <div className="px-3 space-y-1">
-                    {/* No Label for main group, as per Notion style usually, or 'Main' */}
+                <div className="px-4 space-y-2">
+                    {!isCollapsed && <SectionLabel>Principal</SectionLabel>}
                     <NavItem href="/" icon={LayoutDashboard} label="Dashboard" isCollapsed={isCollapsed} active={pathname === '/'} />
                     <NavItem href="/orders" icon={ShoppingBag} label="Pedidos" isCollapsed={isCollapsed} active={pathname.startsWith('/orders')} />
                     <NavItem href="/products" icon={Package} label="Productos" isCollapsed={isCollapsed} active={pathname.startsWith('/products')} />
@@ -81,7 +88,7 @@ export function Sidebar({ user }: SidebarProps) {
                 </div>
 
                 {/* Gestion Group */}
-                <div className="px-3 space-y-1">
+                <div className="px-4 space-y-2">
                     {!isCollapsed && <SectionLabel>Gestión</SectionLabel>}
                     <NavItem href="/categories" icon={Layers} label="Categorías" isCollapsed={isCollapsed} active={pathname === '/categories'} />
                     <NavItem href="/discounts" icon={Tag} label="Descuentos" isCollapsed={isCollapsed} active={pathname === '/discounts'} />
@@ -89,7 +96,7 @@ export function Sidebar({ user }: SidebarProps) {
                 </div>
 
                 {/* Sistema Group */}
-                <div className="px-3 space-y-1">
+                <div className="px-4 space-y-2">
                     {!isCollapsed && <SectionLabel>Sistema</SectionLabel>}
                     <NavItem href="/integrations" icon={Share2} label="Integraciones" isCollapsed={isCollapsed} active={pathname === '/integrations'} />
                     <NavItem href="/settings" icon={Settings} label="Configuración" isCollapsed={isCollapsed} active={pathname === '/settings'} />
@@ -97,18 +104,18 @@ export function Sidebar({ user }: SidebarProps) {
             </div>
 
             {/* Footer / User */}
-            <div className="p-4 border-t border-[var(--border)] mt-auto">
-                <div className={cn("flex items-center gap-3", isCollapsed ? "justify-center" : "justify-between")}>
+            <div className="p-6 border-t border-[var(--border)] mt-auto">
+                <div className={cn("flex items-center gap-4", isCollapsed ? "justify-center" : "justify-between")}>
                     {!isCollapsed && (
                         <div className="overflow-hidden">
-                            <p className="text-[11px] font-medium text-[var(--text-primary)] truncate">{user.email?.split('@')[0] || 'User'}</p>
-                            <p className="text-[9px] text-[var(--text-secondary)] uppercase tracking-wider">Admin</p>
+                            <p className="text-xs font-medium text-[var(--text-primary)] truncate tracking-wide">{user.email?.split('@')[0] || 'User'}</p>
+                            <p className="text-[9px] text-[var(--text-secondary)] uppercase tracking-wider mt-0.5">Admin</p>
                         </div>
                     )}
 
                     <form action="/auth/signout" method="post">
                         <button className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors p-2 rounded-sm hover:bg-[var(--surface-hover)] group">
-                            <LogOut className="w-4 h-4 opacity-60 group-hover:opacity-100" />
+                            <LogOut className="w-5 h-5 opacity-60 group-hover:opacity-100" />
                         </button>
                     </form>
                 </div>
@@ -117,7 +124,7 @@ export function Sidebar({ user }: SidebarProps) {
             {/* Collapse Trigger */}
             <button
                 onClick={toggleSidebar}
-                className="absolute -right-3 top-20 bg-[var(--surface)] border border-[var(--border)] rounded-full p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] shadow-sm hover:border-[var(--accent-copper)] transition-colors"
+                className="absolute -right-3 top-24 bg-[var(--surface)] border border-[var(--border)] rounded-full p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] shadow-sm hover:border-[var(--accent-copper)] transition-colors opacity-0 group-hover/sidebar:opacity-100 focus:opacity-100"
             >
                 {isCollapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
             </button>
@@ -131,19 +138,20 @@ function NavItem({ href, icon: Icon, label, isCollapsed, active }: any) {
         <Link
             href={href}
             className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-sm transition-all duration-200 group relative",
+                "flex items-center gap-4 px-4 py-3 rounded-sm transition-all duration-300 group relative",
+                isCollapsed ? "justify-center" : "justify-start",
                 active
-                    ? "bg-[var(--surface-hover)] text-[var(--text-primary)]"
+                    ? "bg-[var(--surface-hover)] text-[var(--text-primary)] shadow-[inset_2px_0_0_0_var(--accent-copper)]"
                     : "text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]"
             )}
         >
-            <Icon className={cn("w-4 h-4 flex-shrink-0 transition-colors", active && "text-[var(--accent-copper)]")} />
+            <Icon className={cn("w-5 h-5 flex-shrink-0 transition-colors", active && "text-[var(--accent-copper)]")} />
 
             {!isCollapsed && (
                 <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="text-[13px] font-medium whitespace-nowrap"
+                    className="text-sm font-normal tracking-wide whitespace-nowrap"
                 >
                     {label}
                 </motion.span>
@@ -151,7 +159,7 @@ function NavItem({ href, icon: Icon, label, isCollapsed, active }: any) {
 
             {/* Tooltip for collapsed state */}
             {isCollapsed && (
-                <div className="absolute left-full ml-4 px-2 py-1 bg-[var(--surface)] border border-[var(--border)] text-[10px] text-[var(--text-primary)] rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">
+                <div className="absolute left-full ml-5 px-3 py-1.5 bg-[var(--surface)] border border-[var(--border)] text-xs text-[var(--text-primary)] rounded shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">
                     {label}
                 </div>
             )}
@@ -161,7 +169,7 @@ function NavItem({ href, icon: Icon, label, isCollapsed, active }: any) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
     return (
-        <div className="px-3 py-2 mt-4 text-[9px] font-mono font-medium uppercase tracking-[0.2em] text-[var(--text-secondary)] opacity-50">
+        <div className="px-4 mt-6 mb-3 text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-[var(--text-secondary)] opacity-40 select-none">
             {children}
         </div>
     );
