@@ -46,7 +46,7 @@ export function SalesChart() {
                             }}
                             itemStyle={{ color: 'var(--text-primary)', fontFamily: 'var(--font-inter)' }}
                             cursor={{ stroke: 'var(--border)', strokeWidth: 1, strokeDasharray: '4 4' }}
-                            formatter={(value: number) => [`$${value}`, 'Ventas']}
+                            formatter={(value: number | undefined) => [`$${value || 0}`, 'Ventas']}
                         />
                         <Area
                             type="monotone"
