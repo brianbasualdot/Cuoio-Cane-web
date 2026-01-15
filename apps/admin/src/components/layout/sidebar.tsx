@@ -29,7 +29,6 @@ export function Sidebar({ user }: SidebarProps) {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const pathname = usePathname();
 
-    // Simple persistence
     useEffect(() => {
         const savedState = localStorage.getItem('sidebarCollapsed');
         if (savedState) {
@@ -72,50 +71,50 @@ export function Sidebar({ user }: SidebarProps) {
             {/* Navigation */}
             <div className="flex-1 overflow-y-auto py-6 space-y-8 scrollbar-thin">
 
-                {/* Primary Group */}
+                {/* Principal Group */}
                 <div className="px-3 space-y-1">
+                    {/* No Label for main group, as per Notion style usually, or 'Main' */}
                     <NavItem href="/" icon={LayoutDashboard} label="Dashboard" isCollapsed={isCollapsed} active={pathname === '/'} />
-                    <NavItem href="/orders" icon={ShoppingBag} label="Orders" isCollapsed={isCollapsed} active={pathname === '/orders'} />
-                    <NavItem href="/products" icon={Package} label="Products" isCollapsed={isCollapsed} active={pathname === '/products'} />
-                    <NavItem href="/customers" icon={Users} label="Customers" isCollapsed={isCollapsed} active={pathname === '/customers'} />
+                    <NavItem href="/orders" icon={ShoppingBag} label="Pedidos" isCollapsed={isCollapsed} active={pathname.startsWith('/orders')} />
+                    <NavItem href="/products" icon={Package} label="Productos" isCollapsed={isCollapsed} active={pathname.startsWith('/products')} />
+                    <NavItem href="/customers" icon={Users} label="Clientes" isCollapsed={isCollapsed} active={pathname === '/customers'} />
                 </div>
 
-                {/* Secondary Group */}
+                {/* Gestion Group */}
                 <div className="px-3 space-y-1">
-                    {!isCollapsed && <SectionLabel>Management</SectionLabel>}
-                    <NavItem href="/discounts" icon={Tag} label="Discounts" isCollapsed={isCollapsed} active={pathname === '/discounts'} />
-                    <NavItem href="/categories" icon={Layers} label="Categories" isCollapsed={isCollapsed} active={pathname === '/categories'} />
-                    <NavItem href="/reports" icon={BarChart} label="Reports" isCollapsed={isCollapsed} active={pathname === '/reports'} />
+                    {!isCollapsed && <SectionLabel>Gestión</SectionLabel>}
+                    <NavItem href="/categories" icon={Layers} label="Categorías" isCollapsed={isCollapsed} active={pathname === '/categories'} />
+                    <NavItem href="/discounts" icon={Tag} label="Descuentos" isCollapsed={isCollapsed} active={pathname === '/discounts'} />
+                    <NavItem href="/reports" icon={BarChart} label="Reportes" isCollapsed={isCollapsed} active={pathname === '/reports'} />
                 </div>
 
-                {/* System Group */}
+                {/* Sistema Group */}
                 <div className="px-3 space-y-1">
-                    {!isCollapsed && <SectionLabel>System</SectionLabel>}
-                    <NavItem href="/settings" icon={Settings} label="Settings" isCollapsed={isCollapsed} active={pathname === '/settings'} />
-                    <NavItem href="/integrations" icon={Share2} label="Integrations" isCollapsed={isCollapsed} active={pathname === '/integrations'} />
-                    <NavItem href="/audit" icon={FileText} label="Audit Logs" isCollapsed={isCollapsed} active={pathname === '/audit'} />
+                    {!isCollapsed && <SectionLabel>Sistema</SectionLabel>}
+                    <NavItem href="/integrations" icon={Share2} label="Integraciones" isCollapsed={isCollapsed} active={pathname === '/integrations'} />
+                    <NavItem href="/settings" icon={Settings} label="Configuración" isCollapsed={isCollapsed} active={pathname === '/settings'} />
                 </div>
             </div>
 
             {/* Footer / User */}
-            <div className="p-4 border-t border-[var(--border)]">
+            <div className="p-4 border-t border-[var(--border)] mt-auto">
                 <div className={cn("flex items-center gap-3", isCollapsed ? "justify-center" : "justify-between")}>
                     {!isCollapsed && (
                         <div className="overflow-hidden">
-                            <p className="text-[11px] font-medium text-[var(--text-primary)] truncate">{user.email?.split('@')[0]}</p>
+                            <p className="text-[11px] font-medium text-[var(--text-primary)] truncate">{user.email?.split('@')[0] || 'User'}</p>
                             <p className="text-[9px] text-[var(--text-secondary)] uppercase tracking-wider">Admin</p>
                         </div>
                     )}
 
                     <form action="/auth/signout" method="post">
-                        <button className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors p-2 rounded-sm hover:bg-[var(--surface-hover)]">
-                            <LogOut className="w-4 h-4" />
+                        <button className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors p-2 rounded-sm hover:bg-[var(--surface-hover)] group">
+                            <LogOut className="w-4 h-4 opacity-60 group-hover:opacity-100" />
                         </button>
                     </form>
                 </div>
             </div>
 
-            {/* Collapse Trigger (Floating bubble style or persistent bottom) */}
+            {/* Collapse Trigger */}
             <button
                 onClick={toggleSidebar}
                 className="absolute -right-3 top-20 bg-[var(--surface)] border border-[var(--border)] rounded-full p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] shadow-sm hover:border-[var(--accent-copper)] transition-colors"
