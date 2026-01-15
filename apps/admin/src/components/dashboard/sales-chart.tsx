@@ -3,13 +3,13 @@
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const data = [
-    { name: 'Lun', value: 4000 },
-    { name: 'Mar', value: 3000 },
-    { name: 'Mie', value: 2000 },
-    { name: 'Jue', value: 2780 },
-    { name: 'Vie', value: 1890 },
-    { name: 'Sab', value: 2390 },
-    { name: 'Dom', value: 3490 },
+    { name: 'LUN', value: 4000 },
+    { name: 'MAR', value: 3000 },
+    { name: 'MIE', value: 2000 },
+    { name: 'JUE', value: 2780 },
+    { name: 'VIE', value: 1890 },
+    { name: 'SAB', value: 2390 },
+    { name: 'DOM', value: 3490 },
 ];
 
 export function SalesChart() {
@@ -31,7 +31,7 @@ export function SalesChart() {
                             dataKey="name"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: 'var(--text-secondary)', fontSize: 10, fontFamily: 'var(--font-inter)', textTransform: 'uppercase', letterSpacing: '0.1em' }}
+                            tick={{ fill: 'var(--text-secondary)', fontSize: 10, fontFamily: 'var(--font-inter)' }}
                             dy={10}
                         />
                         <YAxis hide={true} />
