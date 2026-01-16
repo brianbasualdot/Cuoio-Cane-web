@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Plus, PackageOpen } from 'lucide-react';
 import { Button } from '@/components/ui/ActionButton';
 import { Badge } from '@/components/ui/StatusBadge';
+import { ProductRowActions } from './ProductRowActions';
 import {
     Table,
     TableBody,
@@ -16,7 +17,8 @@ export default async function ProductsPage() {
     const supabase = await createClient();
     const { data: products } = await supabase
         .from('products')
-        .select('*, variants:product_variants(*)');
+        .select('*, variants:product_variants(*)')
+        .order('created_at', { ascending: false });
 
     const hasProducts = products && products.length > 0;
 
@@ -48,6 +50,7 @@ export default async function ProductsPage() {
                                 <TableHead>Precio</TableHead>
                                 <TableHead>Stock Total</TableHead>
                                 <TableHead>Estado</TableHead>
+                                <TableHead className="w-[50px]"></TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -67,6 +70,9 @@ export default async function ProductsPage() {
                                             <Badge variant={product.is_active && stockTotal > 0 ? "success" : "destructive"}>
                                                 {product.is_active ? (stockTotal > 0 ? 'Activo' : 'Sin Stock') : 'Inactivo'}
                                             </Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            <ProductRowActions product={product} />
                                         </TableCell>
                                     </TableRow>
                                 );
