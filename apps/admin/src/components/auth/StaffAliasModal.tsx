@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/CardContainer';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ActionButton';
 import { Input } from '@/components/ui/InputField';
 
 interface StaffAliasModalProps {

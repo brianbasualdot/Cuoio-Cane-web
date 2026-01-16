@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/ActionButton';
+import { Badge } from '@/components/ui/StatusBadge';
 import {
     Table,
     TableBody,
@@ -9,7 +9,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/ui/Table';
+} from '@/components/ui/DataTable';
 
 export default function ProductsPage() {
     return (

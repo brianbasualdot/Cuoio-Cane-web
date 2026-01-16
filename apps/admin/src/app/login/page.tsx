@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ActionButton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/CardContainer';
 import { Input } from '@/components/ui/InputField';
 import { login } from './actions';

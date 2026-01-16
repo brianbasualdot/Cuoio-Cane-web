@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowLeft, Save, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ActionButton';
 import { Input } from '@/components/ui/InputField';
 import { Card, CardContent } from '@/components/ui/CardContainer';
 

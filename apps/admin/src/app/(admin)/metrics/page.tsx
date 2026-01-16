@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
-import { Badge } from '@/components/ui/Badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/DataTable';
+import { Badge } from '@/components/ui/StatusBadge';
 import { Card } from '@/components/ui/CardContainer';
 import { redirect } from 'next/navigation';
 

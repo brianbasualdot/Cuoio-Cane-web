@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/StatusBadge';
 import {
     Table,
     TableBody,
@@ -6,7 +6,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/ui/Table';
+} from '@/components/ui/DataTable';
 
 export default function OrdersPage() {
     return (

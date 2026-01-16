@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
-import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from '@/components/ui/Table';
-import { Button } from '@/components/ui/Button';
+import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from '@/components/ui/DataTable';
+import { Button } from '@/components/ui/ActionButton';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { DiscountRow } from './DiscountRow';

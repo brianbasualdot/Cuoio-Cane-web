@@ -1,8 +1,8 @@
 'use client';
 
-import { TableCell, TableRow } from '@/components/ui/Table';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { TableCell, TableRow } from '@/components/ui/DataTable';
+import { Badge } from '@/components/ui/StatusBadge';
+import { Button } from '@/components/ui/ActionButton';
 import { Trash2, RefreshCw } from 'lucide-react';
 import { toggleDiscountStatus, deleteDiscount } from './actions';
 import { useTransition } from 'react';
