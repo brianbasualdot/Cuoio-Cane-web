@@ -1,41 +1,24 @@
-import { cn } from "@/lib/utils";
-import React from "react";
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    error?: boolean;
-}
+export interface InputProps
+    extends React.InputHTMLAttributes<HTMLInputElement> { }
 
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, error, ...props }, ref) => {
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+    ({ className, type, ...props }, ref) => {
         return (
             <input
-                ref={ref}
+                type={type}
                 className={cn(
-                    // LAYOUT
-                    "flex w-full bg-background px-4 py-2 file:border-0 file:bg-transparent file:text-sm file:font-medium",
-
-                    // HEIGHT (Manifesto strict)
-                    "h-11",
-
-                    // BORDERS & RADIUS
-                    "rounded-token-md border border-border",
-
-                    // TYPOGRAPHY
-                    "text-sm font-sans placeholder:text-[var(--text-muted)]",
-
-                    // STATES
-                    "focus-visible:outline-none focus-visible:border-coffee-light focus-visible:ring-1 focus-visible:ring-coffee-light/20",
-                    "disabled:cursor-not-allowed disabled:opacity-50",
-                    "transition-colors duration-200",
-
-                    // ERROR
-                    error && "border-red-900/50 focus-visible:border-red-500/50",
-
+                    'flex h-9 w-full rounded-token-md border border-border-base bg-surface px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-coffee disabled:cursor-not-allowed disabled:opacity-50 text-zinc-200',
                     className
                 )}
+                ref={ref}
                 {...props}
             />
         );
     }
 );
-Input.displayName = "Input";
+Input.displayName = 'Input';
+
+export { Input };

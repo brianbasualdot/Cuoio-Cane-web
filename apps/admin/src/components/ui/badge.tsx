@@ -1,28 +1,36 @@
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
 
-interface BadgeProps {
-    children: React.ReactNode;
-    variant?: "default" | "success" | "warning" | "error" | "outline";
-    className?: string;
-}
+const badgeVariants = cva(
+    'inline-flex items-center rounded-token-sm border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+    {
+        variants: {
+            variant: {
+                default:
+                    'border-transparent bg-coffee text-white hover:bg-coffee/80',
+                secondary:
+                    'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
+                destructive:
+                    'border-transparent bg-red-900 text-red-100 hover:bg-red-900/80',
+                outline: 'text-zinc-400 border-zinc-700',
+                success: 'border-transparent bg-emerald-900/30 text-emerald-400 hover:bg-emerald-900/50',
+            },
+        },
+        defaultVariants: {
+            variant: 'default',
+        },
+    }
+);
 
-export function Badge({ children, variant = "default", className }: BadgeProps) {
+export interface BadgeProps
+    extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> { }
+
+function Badge({ className, variant, ...props }: BadgeProps) {
     return (
-        <span className={cn(
-            "inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-medium uppercase tracking-wider border",
-
-            // VARIANTS
-            variant === "default" && "bg-surface text-[var(--text-secondary)] border-border",
-            variant === "outline" && "bg-transparent text-[var(--text-primary)] border-border",
-
-            // STATUS COLORS (Hardened, no random tailwind colors)
-            variant === "success" && "text-emerald-400 bg-emerald-950/30 border-emerald-900/50",
-            variant === "warning" && "text-amber-400 bg-amber-950/30 border-amber-900/50",
-            variant === "error" && "text-red-400 bg-red-950/30 border-red-900/50",
-
-            className
-        )}>
-            {children}
-        </span>
+        <div className={cn(badgeVariants({ variant }), className)} {...props} />
     );
 }
+
+export { Badge, badgeVariants };

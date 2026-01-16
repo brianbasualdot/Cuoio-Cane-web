@@ -1,37 +1,75 @@
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-    variant?: "default" | "hoverable" | "flat";
-    noPadding?: boolean;
-}
+const Card = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+    <div
+        ref={ref}
+        className={cn(
+            'rounded-token-lg border border-border-subtle bg-surface text-zinc-200 shadow-sm',
+            className
+        )}
+        {...props}
+    />
+));
+Card.displayName = 'Card';
 
-export function Card({
-    children,
-    className,
-    variant = "default",
-    noPadding = false,
-    ...props
-}: CardProps) {
-    return (
-        <div
-            className={cn(
-                "rounded-token-lg border transition-all duration-200",
-                // BASE STYLES
-                "bg-surface text-[var(--text-primary)]",
+const CardHeader = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+    <div
+        ref={ref}
+        className={cn('flex flex-col space-y-1.5 p-6', className)}
+        {...props}
+    />
+));
+CardHeader.displayName = 'CardHeader';
 
-                // VARIANTS
-                variant === "default" && "border-border shadow-elevation-1",
-                variant === "hoverable" && "border-border hover:border-border-subtle hover:bg-surface-hover cursor-pointer shadow-elevation-1 hover:shadow-elevation-2",
-                variant === "flat" && "border-transparent bg-transparent shadow-none",
+const CardTitle = React.forwardRef<
+    HTMLParagraphElement,
+    React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+    <h3
+        ref={ref}
+        className={cn('font-serif text-lg font-semibold leading-none tracking-tight text-white', className)}
+        {...props}
+    />
+));
+CardTitle.displayName = 'CardTitle';
 
-                // PADDING (Explicit or None)
-                !noPadding && "p-6",
+const CardDescription = React.forwardRef<
+    HTMLParagraphElement,
+    React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+    <p
+        ref={ref}
+        className={cn('text-sm text-zinc-500', className)}
+        {...props}
+    />
+));
+CardDescription.displayName = 'CardDescription';
 
-                className
-            )}
-            {...props}
-        >
-            {children}
-        </div>
-    );
-}
+const CardContent = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+));
+CardContent.displayName = 'CardContent';
+
+const CardFooter = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+    <div
+        ref={ref}
+        className={cn('flex items-center p-6 pt-0', className)}
+        {...props}
+    />
+));
+CardFooter.displayName = 'CardFooter';
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };

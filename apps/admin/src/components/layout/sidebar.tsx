@@ -3,118 +3,96 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-    LayoutDashboard,
+    Home,
     ShoppingBag,
     Package,
     Users,
-    Settings,
-    LogOut,
     Layers,
-    BarChart,
-    Tag,
-    Share2
+    TicketPercent,
+    Settings,
+    Puzzle,
+    LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { signout } from '@/app/actions';
 
-interface SidebarProps {
-    user: any;
-}
+const MAIN_NAV = [
+    { name: 'Inicio', href: '/', icon: Home },
+    { name: 'Pedidos', href: '/pedidos', icon: ShoppingBag },
+    { name: 'Productos', href: '/productos', icon: Package },
+    { name: 'Clientes', href: '/clientes', icon: Users },
+];
 
-export function Sidebar({ user }: SidebarProps) {
-    const pathname = usePathname();
+const MANAGEMENT_NAV = [
+    { name: 'Categorías', href: '/categorias', icon: Layers },
+    { name: 'Descuentos', href: '/descuentos', icon: TicketPercent },
+];
 
+const SYSTEM_NAV = [
+    { name: 'Integraciones', href: '/integraciones', icon: Puzzle },
+    { name: 'Configuración', href: '/configuracion', icon: Settings },
+];
+
+function NavGroup({ title, items, pathname }: { title?: string; items: typeof MAIN_NAV; pathname: string }) {
     return (
-        // CONTAINER: Rigid 260px Width, Full Height, Fixed Border
-        <aside className="w-[260px] h-full flex flex-col bg-[var(--surface)] border-r border-[var(--border)] text-[var(--text-secondary)]">
-
-            {/* HEADER: Rigid Height (80px), Padding */}
-            <div className="h-20 flex flex-col justify-center px-6 border-b border-[var(--border)] shrink-0">
-                <span className="font-serif-title text-xl text-[var(--text-primary)] tracking-tight">
-                    Cuoio Cane
-                </span>
-                <span className="font-sans text-[10px] uppercase tracking-[0.25em] opacity-60 mt-0.5">
-                    Atelier Admin
-                </span>
-            </div>
-
-            {/* SCROLLABLE NAV: Flex Grow, Safe Overflow */}
-            <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-8">
-
-                {/* GROUP 1: Principal */}
-                <div className="space-y-1">
-                    <div className="px-3 mb-2">
-                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--accent-copper)] opacity-80">
-                            Principal
-                        </span>
-                    </div>
-                    <NavItem href="/" icon={LayoutDashboard} label="Dashboard" active={pathname === '/'} />
-                    <NavItem href="/orders" icon={ShoppingBag} label="Pedidos" active={pathname.startsWith('/orders')} />
-                    <NavItem href="/products" icon={Package} label="Productos" active={pathname.startsWith('/products')} />
-                    <NavItem href="/customers" icon={Users} label="Clientes" active={pathname.startsWith('/customers')} />
-                </div>
-
-                {/* GROUP 2: Gestión */}
-                <div className="space-y-1">
-                    <div className="px-3 mb-2">
-                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--accent-copper)] opacity-80">
-                            Gestión
-                        </span>
-                    </div>
-                    <NavItem href="/categories" icon={Layers} label="Categorías" active={pathname.startsWith('/categories')} />
-                    <NavItem href="/discounts" icon={Tag} label="Descuentos" active={pathname.startsWith('/discounts')} />
-                    <NavItem href="/reports" icon={BarChart} label="Reportes" active={pathname.startsWith('/reports')} />
-                </div>
-
-                {/* GROUP 3: Sistema */}
-                <div className="space-y-1">
-                    <div className="px-3 mb-2">
-                        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--accent-copper)] opacity-80">
-                            Sistema
-                        </span>
-                    </div>
-                    <NavItem href="/integrations" icon={Share2} label="Integraciones" active={pathname.startsWith('/integrations')} />
-                    <NavItem href="/settings" icon={Settings} label="Configuración" active={pathname.startsWith('/settings')} />
-                </div>
-
-            </nav>
-
-            {/* FOOTER: User Profile, Rigid Height */}
-            <div className="p-5 border-t border-[var(--border)] bg-[var(--background)] shrink-0">
-                <div className="flex items-center justify-between">
-                    <div className="flex flex-col overflow-hidden mr-2">
-                        <span className="font-medium text-xs text-[var(--text-primary)] truncate">
-                            {user?.email?.split('@')[0] || 'Administrator'}
-                        </span>
-                        <span className="text-[10px] uppercase tracking-wider opacity-60">
-                            Sesión Activa
-                        </span>
-                    </div>
-                    <form action="/auth/signout" method="post">
-                        <button className="p-2 rounded hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] transition-colors">
-                            <LogOut className="w-4 h-4" />
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-        </aside>
+        <div className="mb-6">
+            {title && (
+                <h4 className="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-zinc-600">
+                    {title}
+                </h4>
+            )}
+            <ul className="space-y-1">
+                {items.map((item) => {
+                    const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                    return (
+                        <li key={item.href}>
+                            <Link
+                                href={item.href}
+                                className={cn(
+                                    'flex items-center gap-3 rounded-token-md px-4 py-2 text-sm transition-colors',
+                                    isActive
+                                        ? 'bg-surface-hover text-white font-medium'
+                                        : 'text-zinc-400 hover:bg-surface-hover hover:text-zinc-200'
+                                )}
+                            >
+                                <item.icon className="h-4 w-4" />
+                                {item.name}
+                            </Link>
+                        </li>
+                    );
+                })}
+            </ul>
+        </div>
     );
 }
 
-// NAV ITEM SUBCOMPONENT
-function NavItem({ href, icon: Icon, label, active }: any) {
+export function Sidebar() {
+    const pathname = usePathname();
+
     return (
-        <Link
-            href={href}
-            className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium tracking-wide transition-all duration-200",
-                active
-                    ? "bg-[var(--background)] text-[var(--text-primary)] border border-[var(--border)] shadow-sm"
-                    : "hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)] border border-transparent"
-            )}
-        >
-            <Icon className={cn("w-4 h-4", active ? "text-[var(--accent-copper)]" : "opacity-70")} />
-            <span>{label}</span>
-        </Link>
+        <aside className="fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-border-base bg-background px-4 py-6">
+            <div className="mb-8 px-4">
+                <h1 className="font-display text-2xl font-bold tracking-tight text-white">
+                    Cuoio Cane
+                    <span className="block text-xs font-sans font-normal text-zinc-500 tracking-widest mt-1">ADMIN</span>
+                </h1>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto">
+                <NavGroup items={MAIN_NAV} pathname={pathname} />
+                <NavGroup title="Gestión" items={MANAGEMENT_NAV} pathname={pathname} />
+                <NavGroup title="Sistema" items={SYSTEM_NAV} pathname={pathname} />
+            </nav>
+
+            <div className="mt-auto pt-6 border-t border-border-subtle">
+                <button
+                    onClick={() => signout()}
+                    className="flex w-full items-center gap-3 rounded-token-md px-4 py-2 text-sm text-zinc-500 transition-colors hover:text-red-400"
+                >
+                    <LogOut className="h-4 w-4" />
+                    Cerrar Sesión
+                </button>
+            </div>
+        </aside>
     );
 }

@@ -1,56 +1,81 @@
-import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
-import React from "react";
+import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: "primary" | "secondary" | "ghost" | "destructive";
-    size?: "sm" | "md" | "lg" | "icon";
+const buttonVariants = cva(
+    'inline-flex items-center justify-center whitespace-nowrap rounded-token-md text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-coffee disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]',
+    {
+        variants: {
+            variant: {
+                default:
+                    'bg-coffee text-white shadow hover:bg-coffee-light',
+                destructive:
+                    'bg-red-900/50 text-red-200 hover:bg-red-900/70 border border-red-900',
+                outline:
+                    'border border-border bg-transparent hover:bg-surface-hover text-zinc-300',
+                secondary:
+                    'bg-surface hover:bg-surface-hover text-zinc-200 border border-border-subtle',
+                ghost: 'hover:bg-surface-hover text-zinc-400 hover:text-zinc-200',
+                link: 'text-coffee underline-offset-4 hover:underline',
+            },
+            size: {
+                default: 'h-9 px-4 py-2',
+                sm: 'h-8 px-3 text-xs',
+                lg: 'h-10 px-8',
+                icon: 'h-9 w-9',
+            },
+        },
+        defaultVariants: {
+            variant: 'default',
+            size: 'default',
+        },
+    }
+);
+
+export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+    asChild?: boolean;
     loading?: boolean;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ className, variant = "primary", size = "md", loading, children, disabled, ...props }, ref) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ className, variant, size, asChild = false, loading, children, ...props }, ref) => {
+        const Comp = asChild ? Slot : 'button';
+
+        // When using asChild (Slot), we must ensure we only pass a single valid React Element as children.
+        // Logic like {loading && <Icon />} {children} creates an array/fragment which Slot rejects.
+        // Therefore, if asChild is true, we skip the internal loading rendering (it should be handled inside the child if needed)
+        // or we simply render 'children'.
+
+        if (asChild) {
+            return (
+                <Comp
+                    className={cn(buttonVariants({ variant, size, className }))}
+                    ref={ref}
+                    disabled={loading || props.disabled}
+                    {...props}
+                >
+                    {children}
+                </Comp>
+            );
+        }
+
         return (
-            <button
+            <Comp
+                className={cn(buttonVariants({ variant, size, className }))}
                 ref={ref}
-                disabled={disabled || loading}
-                className={cn(
-                    // BASE LAYOUT
-                    "inline-flex items-center justify-center font-sans font-medium transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-coffee-light/50 disabled:opacity-50 disabled:pointer-events-none",
-                    "tracking-wide uppercase text-[11px]", // Atelier Typography
-
-                    // RADIUS TOKEN
-                    "rounded-token-md",
-
-                    // SIZES
-                    size === "sm" && "h-8 px-3",
-                    size === "md" && "h-11 px-5", // Manifesto h-11
-                    size === "lg" && "h-12 px-8",
-                    size === "icon" && "h-10 w-10",
-
-                    // VARIANTS
-                    variant === "primary" && [
-                        "bg-coffee hover:bg-coffee-light text-white shadow-elevation-1",
-                        "border border-coffee-light/30"
-                    ],
-                    variant === "secondary" && [
-                        "bg-surface border border-border text-[var(--text-primary)] hover:bg-surface-hover hover:border-border-subtle"
-                    ],
-                    variant === "ghost" && [
-                        "bg-transparent hover:bg-surface-hover text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                    ],
-                    variant === "destructive" && [
-                        "bg-red-900/20 text-red-400 border border-red-900/50 hover:bg-red-900/30"
-                    ],
-
-                    className
-                )}
+                disabled={loading || props.disabled}
                 {...props}
             >
-                {loading && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {children}
-            </button>
+            </Comp>
         );
     }
 );
-Button.displayName = "Button";
+Button.displayName = 'Button';
+
+export { Button, buttonVariants };
