@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/layout/Sidebar';
-import { Header } from '@/components/layout/Header';
+import { Header } from '@/components/layout/AdminHeader';
 
 export default async function AdminLayout({
     children,
