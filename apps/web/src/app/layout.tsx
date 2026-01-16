@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description: 'Collares y correas de cuero legítimo para perros.',
 };
 
+import { WhatsAppButton } from '@/components/layout/WhatsAppButton';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,6 +39,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <WhatsAppButton />
         </Providers>
       </body>
     </html>

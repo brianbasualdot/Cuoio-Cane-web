@@ -1,5 +1,6 @@
+import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+import { Plus, PackageOpen } from 'lucide-react';
 import { Button } from '@/components/ui/ActionButton';
 import { Badge } from '@/components/ui/StatusBadge';
 import {
@@ -11,7 +12,14 @@ import {
     TableRow,
 } from '@/components/ui/DataTable';
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+    const supabase = await createClient();
+    const { data: products } = await supabase
+        .from('products')
+        .select('*, variants:product_variants(*)');
+
+    const hasProducts = products && products.length > 0;
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -24,49 +32,49 @@ export default function ProductsPage() {
                 </Button>
             </div>
 
-            <div className="border border-border-subtle rounded-token-lg bg-surface">
-                <Table>
-                    <TableHeader>
-                        <TableRow className="hover:bg-transparent">
-                            <TableHead className="w-[300px]">Nombre</TableHead>
-                            <TableHead>SKU</TableHead>
-                            <TableHead>Precio</TableHead>
-                            <TableHead>Stock</TableHead>
-                            <TableHead>Estado</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {/* Example Row - In real app, map through data */}
-                        <TableRow>
-                            <TableCell className="font-medium text-zinc-200">Billetera Compacta - Cuero Italiano</TableCell>
-                            <TableCell>BIL-001</TableCell>
-                            <TableCell>$45.000</TableCell>
-                            <TableCell>12</TableCell>
-                            <TableCell>
-                                <Badge variant="success">Activo</Badge>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium text-zinc-200">Cinturón Clásico - Negro</TableCell>
-                            <TableCell>CIN-004</TableCell>
-                            <TableCell>$32.000</TableCell>
-                            <TableCell>8</TableCell>
-                            <TableCell>
-                                <Badge variant="success">Activo</Badge>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium text-zinc-200">Bolso de Viaje</TableCell>
-                            <TableCell>BOL-012</TableCell>
-                            <TableCell>$120.000</TableCell>
-                            <TableCell>0</TableCell>
-                            <TableCell>
-                                <Badge variant="destructive">Sin Stock</Badge>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </div>
+            {!hasProducts ? (
+                <div className="flex flex-col items-center justify-center py-24 border border-border-subtle rounded-token-lg bg-surface/50 border-dashed">
+                    <PackageOpen className="h-12 w-12 text-zinc-600 mb-4" strokeWidth={1} />
+                    <p className="text-zinc-500 font-display text-lg">No hay nada por aqui..</p>
+                    <p className="text-zinc-700 text-sm mt-1">Comienza agregando tu primer producto</p>
+                </div>
+            ) : (
+                <div className="border border-border-subtle rounded-token-lg bg-surface">
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="hover:bg-transparent">
+                                <TableHead className="w-[300px]">Nombre</TableHead>
+                                <TableHead>SKU (Variantes)</TableHead>
+                                <TableHead>Precio</TableHead>
+                                <TableHead>Stock Total</TableHead>
+                                <TableHead>Estado</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {products.map((product) => {
+                                // Simple aggregation for MVP display
+                                const stockTotal = product.variants?.reduce((acc: number, v: any) => acc + v.stock_quantity, 0) || 0;
+                                const price = product.variants?.[0]?.price || 0;
+                                const skus = product.variants?.map((v: any) => v.sku).join(', ') || '-';
+
+                                return (
+                                    <TableRow key={product.id}>
+                                        <TableCell className="font-medium text-zinc-200">{product.name}</TableCell>
+                                        <TableCell className="text-muted-foreground">{skus}</TableCell>
+                                        <TableCell>{new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(price)}</TableCell>
+                                        <TableCell>{stockTotal}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={product.is_active && stockTotal > 0 ? "success" : "destructive"}>
+                                                {product.is_active ? (stockTotal > 0 ? 'Activo' : 'Sin Stock') : 'Inactivo'}
+                                            </Badge>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </div>
+            )}
         </div>
     );
 }
