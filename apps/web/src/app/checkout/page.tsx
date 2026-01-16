@@ -19,6 +19,10 @@ export default function CheckoutPage() {
     const [shippingMethod, setShippingMethod] = useState('andreani');
     const [paymentMethod, setPaymentMethod] = useState('mercadopago');
 
+    // Coupon State
+    const [couponCode, setCouponCode] = useState<string | null>(null);
+    const [discountAmount, setDiscountAmount] = useState(0);
+
     // Basic Form State (Use React Hook Form in production)
     const [formData, setFormData] = useState({
         email: '',
@@ -37,6 +41,30 @@ export default function CheckoutPage() {
     // Calculate details
     const subtotal = totalPrice();
     const shippingCost = shippingMethod === 'pickup' ? 0 : 5000; // Mock cost
+
+    const handleApplyCoupon = async (code: string): Promise<boolean> => {
+        try {
+            const result = await api.post('/discounts/validate', {
+                code,
+                total: subtotal,
+                itemIds: items.map(i => i.variantId)
+            });
+
+            if (result.valid) {
+                setDiscountAmount(result.discountAmount);
+                setCouponCode(code);
+                return true;
+            } else {
+                setDiscountAmount(0);
+                setCouponCode(null);
+                // Optionally show specific message from result.message calling separate toast
+                return false;
+            }
+        } catch (error) {
+            console.error('Coupon validation failed', error);
+            return false;
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,7 +87,8 @@ export default function CheckoutPage() {
                 items: items.map(item => ({
                     variant_id: item.variantId,
                     quantity: item.quantity
-                }))
+                })),
+                coupon_code: couponCode // Send coupon to API
             };
 
             const order = await api.post('/orders', orderPayload);
@@ -164,7 +193,13 @@ export default function CheckoutPage() {
 
                 {/* Summary */}
                 <div className="md:sticky md:top-24 h-fit">
-                    <CheckoutSummary items={items} subtotal={subtotal} shippingCost={shippingCost} />
+                    <CheckoutSummary
+                        items={items}
+                        subtotal={subtotal}
+                        shippingCost={shippingCost}
+                        discountAmount={discountAmount}
+                        onApplyCoupon={handleApplyCoupon}
+                    />
                 </div>
             </div>
         </div>

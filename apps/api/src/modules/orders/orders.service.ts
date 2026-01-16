@@ -1,11 +1,13 @@
 import { BadRequestException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { CreateOrderDto } from './orders.dto';
+import { DiscountsService } from '../discounts/discounts.service';
 
 @Injectable()
 export class OrdersService {
     constructor(
         @Inject('SUPABASE_CLIENT') private readonly supabase: SupabaseClient,
+        private readonly discountsService: DiscountsService,
     ) { }
 
     async create(createOrderDto: CreateOrderDto, userId?: string) {
@@ -53,8 +55,27 @@ export class OrdersService {
             shippingCost = 8000;
         }
 
-        const discountAmount = 0; // Logic for discounts (coupons) can go here
+        // 3.5 Calculate Discount
+        let discountAmount = 0;
+        if (orderData.coupon_code) {
+            const validation = await this.discountsService.validateCoupon(
+                orderData.coupon_code,
+                itemsSubtotal,
+                items.map(i => i.variant_id) // Ideally checks product IDs, but service handles logic
+            );
+            if (validation.valid) {
+                discountAmount = validation.discountAmount;
+            }
+            // We allow creating an order with an invalid coupon, just with 0 discount? 
+            // Or throw? Prompt says "Validación Blanda (Frontend)... Validación Dura (Backend al crear preference)".
+            // Creating Order is before Preference. Let's just apply it if valid, ignore if not?
+            // Or throw error to notify frontend?
+            // Since frontend calls /validate first, this should be valid. If not, it's better to accept the order without discount 
+            // or reject it. Let's accept it but define discount as 0 if invalid.
+        }
+
         const totalAmount = itemsSubtotal + shippingCost - discountAmount;
+        if (totalAmount < 0) throw new BadRequestException('Total cannot be negative');
 
         // 4. Create Order (Ideally Transactional)
         const { data: order, error: orderError } = await this.supabase
@@ -71,6 +92,7 @@ export class OrdersService {
                 discount_amount: discountAmount,
                 total_amount: totalAmount,
                 shipping_address: orderData.shipping_address,
+                coupon_code: discountAmount > 0 ? orderData.coupon_code : null, // Only store code if applied
             })
             .select()
             .single();

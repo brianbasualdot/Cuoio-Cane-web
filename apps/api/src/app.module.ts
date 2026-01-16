@@ -6,6 +6,7 @@ import { ProductsModule } from './modules/products/products.module';
 
 import { OrdersModule } from './modules/orders/orders.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { DiscountsModule } from './modules/discounts/discounts.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
         ProductsModule,
         OrdersModule,
         PaymentsModule,
+        DiscountsModule,
     ],
     controllers: [],
     providers: [],

@@ -22,6 +22,7 @@ export const createOrderSchema = z.object({
     shipping_address: shippingAddressSchema,
     items: z.array(orderItemSchema).min(1),
     shipping_method: z.enum(['andreani', 'correo_argentino', 'pickup']),
+    coupon_code: z.string().optional(),
 });
 
 export type CreateOrderDto = z.infer<typeof createOrderSchema>;
