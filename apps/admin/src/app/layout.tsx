@@ -26,15 +26,38 @@ export const metadata: Metadata = {
     description: 'Management & Control',
 };
 
-export default function RootLayout({
+import { createClient } from '@/lib/supabase/server';
+import { StaffAliasProvider } from '@/contexts/StaffAliasContext';
+
+export default async function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const supabase = await createClient();
+
+    // Check for user session
+    const { data: { user } } = await supabase.auth.getUser();
+
+    let userRole: string | null = null;
+
+    if (user) {
+        // Fetch role from profiles
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+
+        userRole = profile?.role || null;
+    }
+
     return (
         <html lang="es" className={`${inter.variable} ${playfair.variable} ${cormorant.variable}`}>
             <body className="antialiased min-h-screen bg-background text-zinc-200">
-                {children}
+                <StaffAliasProvider userRole={userRole}>
+                    {children}
+                </StaffAliasProvider>
             </body>
         </html>
     );
