@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import { Button } from "@/components/ui/button"
+
 export function Footer() {
     return (
         <footer className="border-t border-white/5 bg-black">
@@ -15,7 +18,7 @@ export function Footer() {
                         <ul className="space-y-3 text-xs text-muted-foreground/60">
                             <li><a href="#" className="hover:text-brand-platinum transition-colors">Envíos y Devoluciones</a></li>
                             <li><a href="#" className="hover:text-brand-platinum transition-colors">Guía de Talles</a></li>
-                            <li><a href="#" className="hover:text-brand-platinum transition-colors">Cuidado del Cuero</a></li>
+                            <li><Link href="/cuidados" className="hover:text-brand-platinum transition-colors">Cuidados</Link></li>
                             <li><a href="#" className="hover:text-brand-platinum transition-colors">Contacto</a></li>
                         </ul>
                     </div>

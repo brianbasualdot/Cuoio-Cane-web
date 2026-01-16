@@ -14,17 +14,20 @@ export function Header() {
                 </Link>
                 <nav className="flex items-center gap-8 text-xs font-medium tracking-[0.15em] uppercase">
                     {/* Navigation Items with Animated Underline */}
-                    {['Colección', 'Cuidado'].map((label, i) => (
-                        <Link
-                            key={label}
-                            href={i === 0 ? "/products" : "/care"}
-                            className="group relative py-1 text-muted-foreground hover:text-brand-platinum transition-colors"
-                        >
-                            {label}
-                            {/* Animated Underline */}
-                            <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-platinum/30 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] origin-left" />
-                        </Link>
-                    ))}
+                    <Link
+                        href="/products"
+                        className="group relative py-1 text-muted-foreground hover:text-brand-platinum transition-colors"
+                    >
+                        Colección
+                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-platinum/30 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] origin-left" />
+                    </Link>
+                    <Link
+                        href="/cuidados"
+                        className="group relative py-1 text-muted-foreground hover:text-brand-platinum transition-colors"
+                    >
+                        Cuidados
+                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-brand-platinum/30 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] origin-left" />
+                    </Link>
                 </nav>
                 <div className="flex items-center space-x-4">
                     {/* Public Store: No Auth UI exposed */}

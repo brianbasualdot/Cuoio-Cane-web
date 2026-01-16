@@ -4,7 +4,12 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
-export async function createProduct(currentState: any, formData: FormData) {
+
+export interface ProductFormState {
+    error: string | null;
+}
+
+export async function createProduct(currentState: ProductFormState, formData: FormData): Promise<ProductFormState> {
     const supabase = await createClient();
 
     const name = formData.get('name') as string;
