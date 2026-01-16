@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, Save, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/InputField';
-import { Card, CardContent } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/CardContainer';
 
 export default function NewProductPage() {
     return (

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/InputField';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/CardContainer';
 import { useActionState } from 'react';
 import { createDiscount } from '../actions';
 
