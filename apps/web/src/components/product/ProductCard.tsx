@@ -11,6 +11,7 @@ interface Product {
     name: string;
     price?: number; // Logic: show lowest variant price?
     variants?: any[];
+    metadata?: any;
 }
 
 export function ProductCard({ product }: { product: Product }) {
@@ -29,16 +30,18 @@ export function ProductCard({ product }: { product: Product }) {
             <Link href={`/products/${product.slug}`} className="group block h-full">
                 <div className="relative aspect-square overflow-hidden bg-surface rounded-sm">
                     {/* Placeholder for Image - in real app would match 'product-images' bucket */}
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 font-serif text-4xl">
+                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground/20 font-serif text-4xl bg-neutral-900">
                         CC
                     </div>
 
-                    {/* <Image 
-               src={imageUrl} 
-               alt={product.name}
-               fill
-               className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-105"
-            /> */}
+                    {product.metadata?.images?.[0] && (
+                        <Image
+                            src={product.metadata.images[0]}
+                            alt={product.name}
+                            fill
+                            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-105"
+                        />
+                    )}
 
                     <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out">
                         <span className="text-copper text-xs font-medium uppercase tracking-[0.2em] translate-y-4 group-hover:translate-y-0 transition-transform duration-700 ease-out inline-block">Ver Detalle</span>
