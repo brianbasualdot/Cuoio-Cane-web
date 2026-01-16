@@ -40,8 +40,9 @@ export function DropdownMenuTrigger({ asChild, children, className }: any) {
             onClick: (e: React.MouseEvent) => {
                 e.stopPropagation();
                 // Safe call to existing onClick
-                if (children.props && 'onClick' in children.props) {
-                    (children.props as any).onClick?.(e);
+                const props = children.props as Record<string, any>;
+                if (props?.onClick) {
+                    props.onClick(e);
                 }
                 setIsOpen(!isOpen);
             }
@@ -78,8 +79,9 @@ export function DropdownMenuItem({ asChild, children, className, ...props }: any
         return React.cloneElement(children as React.ReactElement<any>, {
             className: cn("relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-white/5 focus:bg-white/5 data-[disabled]:opacity-50", className),
             onClick: (e: any) => {
-                if (children.props && 'onClick' in children.props) {
-                    (children.props as any).onClick?.(e);
+                const childProps = children.props as Record<string, any>;
+                if (childProps?.onClick) {
+                    childProps.onClick(e);
                 }
                 setIsOpen(false);
             }
