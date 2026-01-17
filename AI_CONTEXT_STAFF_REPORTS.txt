@@ -1,0 +1,105 @@
+# PROYECTO: Cuoio Cane - Sistema Admin & Staff
+## Documentación Técnica y Contexto de Implementación
+
+Este documento detalla la implementación de los módulos de "Usuarios Operativos (Staff)" y "Exportación de Reportes", diseñado para que otra IA o desarrollador pueda replicar o entender la arquitectura.
+
+---
+
+### 1. Stack Tecnológico
+- **Frontend**: Next.js (App Router), Tailwind CSS, Lucide React.
+- **Backend**: NestJS (Modular), TypeScript.
+- **Base de Datos / Auth**: Supabase (PostgreSQL).
+- **Librerías Clave**: `pdfkit` (PDFs), `json2csv` (CSV), `crypto` (Node.js nativo).
+
+---
+
+### 2. Feature: Usuarios Operativos (Staff)
+
+#### Concepto: "Cuentas Sombra" (Shadow Accounts)
+El requerimiento era permitir login para staff usando solo **Alias** y **Código numérico (2 dígitos)**, sin email ni contraseña visible.
+Para mantener la seguridad y compatibilidad con **Row Level Security (RLS)** de Supabase, implementamos "Cuentas Sombra".
+
+- **Funcionamiento**:
+  1. El Admin crea un usuario (ej: Alias "JUAN", Código "12").
+  2. El Backend genera internamente un email (`juan@staff.internal`) y una contraseña determinista (HMAC del Alias + Salt).
+  3. Se crea el usuario en `auth.users` (Supabase) y se guarda el `alias` y `operative_code` en la tabla `profiles`.
+  4. Al loguearse, el staff ingresa Alias/Código → El sistema regenera la contraseña interna y autentica contra Supabase Auth.
+
+#### Base de Datos (PostgreSQL / Supabase)
+Archivo de migración: `supabase/migrations/20260117000000_add_operative_fields_to_profiles.sql`
+
+```sql
+ALTER TABLE profiles
+ADD COLUMN alias TEXT UNIQUE,
+ADD COLUMN operative_code TEXT, -- Código original (2 dígitos) para gestión visual del admin
+ADD COLUMN is_active BOOLEAN DEFAULT true;
+CREATE INDEX idx_profiles_alias ON profiles(alias);
+```
+
+#### Backend (NestJS)
+Ubicación: `apps/api/src/modules/staff`
+
+**StaffService (`staff.service.ts`)**:
+- `createStaff(alias, code)`: 
+  - Genera contraseña sombra: `HMAC_SHA256(alias, SALT)`.
+  - Usa `supabase.auth.admin.createUser` (Service Role) para crear el usuario sin confirmación de email.
+  - Inserta/Actualiza en `profiles`.
+- `validateStaffLogin(alias, code)`:
+  - Verifica en `profiles` que el alias exista, esté activo y el código coincida.
+  - Regenera la contraseña sombra y llama a `signInWithPassword`.
+  - Retorna la sesión de Supabase.
+
+**Seguridad (`env.validation.ts` / `supabase.module.ts`)**:
+- Se agregó `SUPABASE_SERVICE_ROLE_KEY` al entorno para permitir al backend gestionar usuarios (Admin API).
+
+#### Frontend (Next.js)
+Ubicación: `apps/admin/src`
+
+**Login (`app/login/page.tsx`, `actions.ts`)**:
+- Se implementaron **Tabs** para alternar entre "Admin" (Email/Pass) y "Staff" (Alias/Code).
+- `loginStaff` Server Action: Llama al endpoint `POST /staff/login` del API y establece la cookie de sesión.
+
+**Gestión de Staff (`app/(admin)/config/users/page.tsx`)**:
+- Tabla para listar, crear (Modal) y desactivar usuarios.
+- Solo visible para rol `admin`.
+
+**UX / UI**:
+- `AliasConfirmationModal.tsx`: Popup que aparece en el Layout principal si el usuario logueado tiene rol `staff`, pidiendo confirmar identidad (capa extra de UX).
+- `Sidebar.tsx`: Enlace "Staff" visible solo para admins.
+
+---
+
+### 3. Feature: Exportación de Reportes
+
+#### Backend (NestJS)
+Ubicación: `apps/api/src/modules/reports`
+
+- **Endpoint**: `GET /reports/export?period=...&format=pdf|csv`
+- **Lógica (`reports.service.ts`)**:
+  - `generatePDF`: Usa `pdfkit` para armar un documento visual con tablas y totales. Retorna un `ReadableStream`.
+  - `generateCSV`: Usa `json2csv` para aplanar los datos.
+  - El Controller pipea el stream directamente a la respuesta (`res`) configurando headers `Content-Disposition`.
+
+#### Frontend (Next.js)
+- **Modal de Exportación**: `ExportModal.tsx`. Permite elegir formato.
+- **Disparador**: Botón "Exportar" en `ReportsView`. Redirige a la URL del API para iniciar la descarga del archivo.
+
+---
+
+### 4. Variables de Entorno Requeridas
+
+**API (`apps/api/.env`)**:
+```env
+SUPABASE_URL=...
+SUPABASE_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=... (Nueva, para gestión de admin)
+SUPABASE_JWT_SECRET=...
+SHADOW_SALT=... (Opcional, para generar passwords de staff)
+```
+
+**Admin (`apps/admin/.env`)**:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3002
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```

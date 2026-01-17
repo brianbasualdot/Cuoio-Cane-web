@@ -1,0 +1,79 @@
+# CONTEXTO TÉCNICO: BACKEND (Cuoio Cane API)
+
+Este documento detalla la arquitectura, tecnologías y conceptos clave del Backend (API) del proyecto.
+
+---
+
+## 1. Stack Tecnológico
+- **Framework**: NestJS (Node.js).
+- **Lenguaje**: TypeScript.
+- **Base de Datos**: PostgreSQL (vía Supabase).
+- **ORM / Cliente DB**: Supabase JS Client (no TypeORM/Prisma por el momento, uso directo de cliente).
+- **Autenticación**: Supabase Auth (JWT).
+- **Librerías Clave**:
+  - `pdfkit`: Generación de reportes PDF.
+  - `json2csv`: Generación de reportes CSV.
+  - `zod`: Validación de variables de entorno.
+
+---
+
+## 2. Arquitectura (NestJS Modular)
+
+El proyecto sigue una arquitectura modular en `apps/api/src`.
+
+### Módulos Principales
+1.  **StaffModule (`/modules/staff`)**:
+    - **Objetivo**: Gestión de "Cuentas Sombra" para empleados.
+    - **Service**: 
+        - Crea usuarios en Supabase Auth (`admin.createUser`) sin requerir email real del usuario final.
+        - Genera passwords deterministas (`HMAC`) basados en el Alias y una `SHADOW_SALT`.
+        - Valida logins regenerando el password y autenticando contra Supabase.
+    - **Controller**: Endpoints para CRUD de staff y Login especial.
+    
+2.  **ReportsModule (`/modules/reports`)**:
+    - **Objetivo**: Generación de documentos exportables.
+    - **Service**: Transformación de datos crudos a Streams (PDF/CSV).
+    - **Controller**: Endpoint `/export` que stremea el archivo con headers de descarga.
+
+3.  **Auth / SupabaseModule**:
+    - Módulo global que inyecta el cliente de Supabase.
+    - Configurado para usar `SUPABASE_SERVICE_ROLE_KEY` para operaciones privilegiadas (crear usuarios, bans).
+
+4.  **Otros Módulos**: `Products`, `Orders`, `Payments` (Lógica de negocio e-commerce).
+
+---
+
+## 3. Base de Datos (Supabase)
+
+### Esquema y Tablas Clave
+- **`profiles`**: Extensión de `auth.users`.
+  - Campos extra: `alias` (Staff), `operative_code` (Staff), `role` ('admin' | 'staff'), `is_active`.
+- **`auth.users`**: Tabla interna de Supabase para manejo de sesiones y seguridad.
+
+### Conceptos de Seguridad
+- **Row Level Security (RLS)**: Habilitado en todas las tablas. El Backend (Service Role) se salta estas reglas para administración, pero el Frontend (Cliente) las respeta estrictamente.
+- **Shadow Accounts**: Estrategia para dar identidad a usuarios operativos sin exponer gestión de emails. El backend actúa como proxy de identidad.
+
+---
+
+## 4. Configuración y Entorno
+
+Variables necesarias en `.env`:
+
+```env
+PORT=3002
+NODE_ENV=development
+SUPABASE_URL=https://[project].supabase.co
+SUPABASE_KEY=[Anon Key]
+SUPABASE_SERVICE_ROLE_KEY=[Service Role Key] # CRÍTICO para gestión de usuarios
+SUPABASE_JWT_SECRET=[JWT Secret]
+SHADOW_SALT=[String aleatorio] # Para seguridad de passwords generados
+```
+
+---
+
+## 5. Flujos Críticos
+1.  **Login Operativo**:
+    - Frontend envía `(Alias, Code)` -> Backend valida en DB -> Backend regenera Password -> Backend hace `signIn` -> Retorna Session Token.
+2.  **Exportación**:
+    - Request con filtros -> Backend consulta DB -> Genera Stream en memoria -> Pipe a Response HTTP.

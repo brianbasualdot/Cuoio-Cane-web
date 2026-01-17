@@ -1,0 +1,10 @@
+C:\Users\Brianbasualdot\Antigravity Projects\Cuoio-cane-Web\apps\desktop\src-tauri\target\release\deps\walkdir-8180aa7152cf621a.d: C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\lib.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\dent.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\error.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\util.rs
+
+C:\Users\Brianbasualdot\Antigravity Projects\Cuoio-cane-Web\apps\desktop\src-tauri\target\release\deps\libwalkdir-8180aa7152cf621a.rlib: C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\lib.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\dent.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\error.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\util.rs
+
+C:\Users\Brianbasualdot\Antigravity Projects\Cuoio-cane-Web\apps\desktop\src-tauri\target\release\deps\libwalkdir-8180aa7152cf621a.rmeta: C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\lib.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\dent.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\error.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\util.rs
+
+C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\lib.rs:
+C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\dent.rs:
+C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\error.rs:
+C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\walkdir-2.5.0\src\util.rs:

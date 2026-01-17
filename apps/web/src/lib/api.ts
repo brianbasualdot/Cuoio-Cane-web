@@ -14,10 +14,20 @@ export class ApiClient {
                 ...(init?.headers || {}),
             };
 
-            const response = await fetch(url, {
-                ...init,
-                headers,
-            });
+            let response;
+            try {
+                response = await fetch(url, {
+                    ...init,
+                    headers,
+                });
+            } catch (error: any) {
+                // Return null if connection refused (e.g. build time without backend)
+                if (error?.cause?.code === 'ECONNREFUSED' || error?.message?.includes('fetch failed')) {
+                    console.warn(`[API Client] Connection refused for ${url}. Returning null/mock.`);
+                    return null;
+                }
+                throw error;
+            }
 
             if (response.status === 204) {
                 return null;

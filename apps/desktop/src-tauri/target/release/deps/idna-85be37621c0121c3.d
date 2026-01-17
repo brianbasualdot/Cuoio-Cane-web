@@ -1,0 +1,10 @@
+C:\Users\Brianbasualdot\Antigravity Projects\Cuoio-cane-Web\apps\desktop\src-tauri\target\release\deps\idna-85be37621c0121c3.d: C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\lib.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\deprecated.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\punycode.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\uts46.rs
+
+C:\Users\Brianbasualdot\Antigravity Projects\Cuoio-cane-Web\apps\desktop\src-tauri\target\release\deps\libidna-85be37621c0121c3.rlib: C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\lib.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\deprecated.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\punycode.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\uts46.rs
+
+C:\Users\Brianbasualdot\Antigravity Projects\Cuoio-cane-Web\apps\desktop\src-tauri\target\release\deps\libidna-85be37621c0121c3.rmeta: C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\lib.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\deprecated.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\punycode.rs C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\uts46.rs
+
+C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\lib.rs:
+C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\deprecated.rs:
+C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\punycode.rs:
+C:\Users\Brianbasualdot\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\idna-1.1.0\src\uts46.rs:

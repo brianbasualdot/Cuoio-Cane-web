@@ -1,0 +1,65 @@
+# CONTEXTO TÉCNICO: FRONTEND (Cuoio Cane)
+
+Este documento detalla la arquitectura, tecnologías y conceptos clave de las aplicaciones Frontend del proyecto.
+
+---
+
+## 1. Stack Tecnológico General
+- **Framework Principal**: Next.js (App Router).
+- **Lenguaje**: TypeScript.
+- **Estilos**: Tailwind CSS.
+- **Componentes UI**: Shadcn/UI (Radix Primitives), Lucide React (Íconos).
+- **Gestión de Estado**: React Hooks nativos (`useState`, `useEffect`, `useActionState` para Server Actions).
+- **Comunicación**: Fetch API (hacia Backend NestJS) + Supabase Client (Auth/Realtime).
+
+---
+
+## 2. Aplicaciones
+
+El proyecto es un monorepo con dos aplicaciones frontend principales:
+
+### A. Tienda Online (`apps/web`)
+**Concepto**: E-commerce público para venta de productos de cuero (Cuoio Cane).
+**Enfoque**: Performance (SEO), Experiencia de Usuario (UX) visual y fluida.
+**Funcionalidades Clave**:
+- Catálogo de Productos (`/products`): Grid de productos con filtros.
+- Detalle de Producto (`/products/[slug]`): Variantes, galería de imágenes.
+- Carrito de Compras: Gestión de estado local y persistencia.
+- Checkout: Flujo de compra (integración con pasarelas, probable).
+- **Diseño**: Minimalista, "Dark Mode" premium, animaciones sutiles.
+
+### B. Panel de Administración (`apps/admin`)
+**Concepto**: Dashboard seguro para la gestión del negocio.
+**Enfoque**: Funcionalidad, densidad de datos, rapidez de gestión.
+**Estructura de Directorios**:
+  - `src/app/(admin)`: Rutas protegidas (Dashboard, Productos, Ordenes).
+  - `src/app/login`: Flujo de autenticación (Admin Email/Pass + Staff Alias/Code).
+  - `src/components`: Componentes reutilizables (Sidebar, Header, Tablas).
+
+**Módulos Clave Implementados**:
+1.  **Dashboard**: Métricas visuales (Ventas, Ordenes).
+2.  **Gestión de Staff (`/config/users`)**:
+    - Creación y baja de usuarios operativos.
+    - Modal de creación y tablas de estado.
+3.  **Reportes (`/reports`)**:
+    - Visualización y opción de exportar datos (PDF/CSV) conectando con el API.
+4.  **Autenticación Híbrida**:
+    - Soporte para Admin (Supabase Auth estándar).
+    - Soporte para Staff (Login simplificado con Alias + Código).
+
+---
+
+## 3. Arquitectura y Patrones (Admin)
+
+- **Layouts**: Uso de `layout.tsx` para inyectar Sidebar y Header persistentes.
+- **Server Actions**: Uso de `actions.ts` para manejo de formularios (Login) y redirecciones seguras desde el servidor.
+- **Protección de Rutas**: Middleware o checks de sesión en `layout` para verificar roles (Admin vs Staff).
+- **Componentes UI**:
+  - `CardContainer`: Contenedor estándar para secciones.
+  - `Sidebar`: Navegación dinámica según rol.
+  - `AliasConfirmationModal`: Popup de seguridad para identidad de Staff.
+
+## 4. Estilos y Theming
+- Uso intensivo de variables CSS (`:root`) para colores semánticos (`--background`, `--foreground`, `--primary`).
+- Clases utilitarias de Tailwind personalizadas en `tailwind.config.js` (ej: `bg-surface`, `text-muted`).
+- Diseño responsivo "Mobile First" pero optimizado para escritorio en Admin.

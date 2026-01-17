@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.tauri.app/config/2",
+    "productName": "Cuoio Cane",
+    "version": "0.1.0",
+    "identifier": "com.cuoiocane.desktop",
+    "build": {
+        "beforeDevCommand": "npm run dev --prefix ../../apps/web",
+        "beforeBuildCommand": "npm run build:desktop --prefix ../../apps/web",
+        "devUrl": "http://localhost:3000",
+        "frontendDist": "../../web/out"
+    },
+    "app": {
+        "windows": [
+            {
+                "title": "Cuoio Cane",
+                "width": 1200,
+                "height": 800
+            }
+        ],
+        "security": {
+            "csp": null
+        }
+    },
+    "bundle": {
+        "active": true,
+        "targets": "all",
+        "icon": [
+            "icons/icons.ico"
+        ]
+    },
+    "plugins": {
+        "fs": {
+            "scope": [
+                "$PROGRAMDATA/Cuoiodesk/LPM/**"
+            ]
+        }
+    }
+}
