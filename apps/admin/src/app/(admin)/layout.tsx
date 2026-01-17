@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/AdminHeader';
+import { AliasConfirmationModal } from '@/components/auth/AliasConfirmationModal';
 
 export default async function AdminLayout({
     children,
@@ -28,6 +29,7 @@ export default async function AdminLayout({
     return (
         <div className="min-h-screen bg-background text-zinc-200">
             <Sidebar userRole={userRole} />
+            <AliasConfirmationModal />
             <div className="pl-64">
                 <Header />
                 <main className="p-8 animate-in fade-in duration-300 slide-in-from-bottom-2">

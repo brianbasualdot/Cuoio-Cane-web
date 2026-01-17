@@ -22,7 +22,9 @@
     "@nestjs/core": "^11.1.11",
     "@nestjs/platform-express": "^11.1.11",
     "@supabase/supabase-js": "^2.90.1",
+    "json2csv": "^6.0.0-alpha.2",
     "mercadopago": "^2.12.0",
+    "pdfkit": "^0.17.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "zod": "^4.3.5"

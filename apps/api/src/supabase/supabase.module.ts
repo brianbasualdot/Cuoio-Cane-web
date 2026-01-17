@@ -8,9 +8,12 @@ import { createClient } from '@supabase/supabase-js';
         {
             provide: 'SUPABASE_CLIENT',
             useFactory: (configService: ConfigService) => {
+                // Backend API should use Service Role Key for Admin privileges (User management etc.)
+                // Fallback to SUPABASE_KEY if SERVICE_ROLE is missing (but functionality will limit)
+                const key = configService.get('SUPABASE_SERVICE_ROLE_KEY') || configService.getOrThrow('SUPABASE_KEY');
                 return createClient(
                     configService.getOrThrow('SUPABASE_URL'),
-                    configService.getOrThrow('SUPABASE_KEY'),
+                    key,
                 );
             },
             inject: [ConfigService],

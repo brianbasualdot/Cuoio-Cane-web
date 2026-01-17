@@ -12,7 +12,8 @@ import {
     Settings,
     Puzzle,
     LogOut,
-    Activity
+    Activity,
+    BarChart3
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { signout } from '@/app/actions';
@@ -117,6 +118,38 @@ export function Sidebar({ userRole }: { userRole?: string | null }) {
                                 >
                                     <Activity className="h-4 w-4" />
                                     Métricas
+                                </Link>
+                            </li>
+                        )}
+                        {userRole === 'admin' && (
+                            <li>
+                                <Link
+                                    href="/reports"
+                                    className={cn(
+                                        'flex items-center gap-3 rounded-token-md px-4 py-2 text-sm transition-colors',
+                                        pathname === '/reports'
+                                            ? 'bg-surface-hover text-white font-medium'
+                                            : 'text-zinc-400 hover:bg-surface-hover hover:text-zinc-200'
+                                    )}
+                                >
+                                    <BarChart3 className="h-4 w-4" />
+                                    Reportes
+                                </Link>
+                            </li>
+                        )}
+                        {userRole === 'admin' && (
+                            <li>
+                                <Link
+                                    href="/config/users"
+                                    className={cn(
+                                        'flex items-center gap-3 rounded-token-md px-4 py-2 text-sm transition-colors',
+                                        pathname === '/config/users'
+                                            ? 'bg-surface-hover text-white font-medium'
+                                            : 'text-zinc-400 hover:bg-surface-hover hover:text-zinc-200'
+                                    )}
+                                >
+                                    <Users className="h-4 w-4" />
+                                    Staff
                                 </Link>
                             </li>
                         )}
