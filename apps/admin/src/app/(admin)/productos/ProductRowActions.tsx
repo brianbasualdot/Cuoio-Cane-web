@@ -1,5 +1,7 @@
 'use client';
 
+import { useTransition } from 'react';
+
 import { MoreHorizontal, Trash2, Edit, Ban, CheckCircle } from 'lucide-react';
 import { deleteProduct, toggleProductStatus } from './actions';
 import { Button } from '@/components/ui/ActionButton';
@@ -18,6 +20,24 @@ interface ProductRowActionsProps {
 }
 
 export function ProductRowActions({ product }: ProductRowActionsProps) {
+    const [isPending, startTransition] = useTransition();
+
+    const handleToggleStatus = (e: React.MouseEvent) => {
+        e.preventDefault();
+        startTransition(async () => {
+            await toggleProductStatus(product.id, product.is_active);
+        });
+    };
+
+    const handleDelete = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+            startTransition(async () => {
+                await deleteProduct(product.id);
+            });
+        }
+    };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -39,41 +59,32 @@ export function ProductRowActions({ product }: ProductRowActionsProps) {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-border-subtle" />
 
-                <form action={toggleProductStatus}>
-                    <input type="hidden" name="id" value={product.id} />
-                    <input type="hidden" name="currentStatus" value={String(product.is_active)} />
-                    <DropdownMenuItem asChild>
-                        <button
-                            type="submit"
-                            className="flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-white/5 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-                        >
-                            {product.is_active ? (
-                                <>
-                                    <Ban className="mr-2 h-4 w-4 text-orange-400" />
-                                    <span className="text-orange-400">Desactivar</span>
-                                </>
-                            ) : (
-                                <>
-                                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-400" />
-                                    <span className="text-emerald-400">Activar</span>
-                                </>
-                            )}
-                        </button>
-                    </DropdownMenuItem>
-                </form>
+                <DropdownMenuItem
+                    className="hover:bg-white/5 cursor-pointer flex w-full items-center rounded-sm px-2 py-1.5 text-sm outline-none"
+                    onClick={handleToggleStatus}
+                    disabled={isPending}
+                >
+                    {product.is_active ? (
+                        <>
+                            <Ban className="mr-2 h-4 w-4 text-orange-400" />
+                            <span className="text-orange-400">Desactivar</span>
+                        </>
+                    ) : (
+                        <>
+                            <CheckCircle className="mr-2 h-4 w-4 text-emerald-400" />
+                            <span className="text-emerald-400">Activar</span>
+                        </>
+                    )}
+                </DropdownMenuItem>
 
-                <form action={deleteProduct}>
-                    <input type="hidden" name="id" value={product.id} />
-                    <DropdownMenuItem asChild>
-                        <button
-                            type="submit"
-                            className="flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-red-500/10 focus:bg-red-500/10 hover:text-red-400 focus:text-red-400 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 text-red-400"
-                        >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Eliminar
-                        </button>
-                    </DropdownMenuItem>
-                </form>
+                <DropdownMenuItem
+                    className="hover:bg-red-500/10 cursor-pointer focus:bg-red-500/10 text-red-400 focus:text-red-400 flex w-full items-center rounded-sm px-2 py-1.5 text-sm outline-none"
+                    onClick={handleDelete}
+                    disabled={isPending}
+                >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Eliminar
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );

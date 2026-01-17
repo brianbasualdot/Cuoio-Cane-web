@@ -106,9 +106,8 @@ export async function createProduct(currentState: ProductFormState, formData: Fo
     redirect('/productos');
 }
 
-export async function deleteProduct(formData: FormData) {
+export async function deleteProduct(id: string) {
     const supabase = await createClient();
-    const id = formData.get('id') as string;
 
     if (!id) return;
 
@@ -116,10 +115,8 @@ export async function deleteProduct(formData: FormData) {
     revalidatePath('/productos');
 }
 
-export async function toggleProductStatus(formData: FormData) {
+export async function toggleProductStatus(id: string, currentStatus: boolean) {
     const supabase = await createClient();
-    const id = formData.get('id') as string;
-    const currentStatus = formData.get('currentStatus') === 'true';
 
     if (!id) return;
 
