@@ -28,8 +28,11 @@ export function ProductRowActions({ product }: ProductRowActionsProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-surface border-border-subtle text-zinc-200">
                 <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                <DropdownMenuItem asChild className="hover:bg-white/5 cursor-pointer">
-                    <Link href={`/productos/${product.slug}`}>
+                <DropdownMenuItem asChild>
+                    <Link
+                        href={`/productos/${product.slug}`}
+                        className="flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-white/5 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                    >
                         <Edit className="mr-2 h-4 w-4" />
                         Editar
                     </Link>
@@ -39,8 +42,11 @@ export function ProductRowActions({ product }: ProductRowActionsProps) {
                 <form action={toggleProductStatus}>
                     <input type="hidden" name="id" value={product.id} />
                     <input type="hidden" name="currentStatus" value={String(product.is_active)} />
-                    <button className="w-full text-left">
-                        <DropdownMenuItem className="hover:bg-white/5 cursor-pointer">
+                    <DropdownMenuItem asChild>
+                        <button
+                            type="submit"
+                            className="flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-white/5 focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                        >
                             {product.is_active ? (
                                 <>
                                     <Ban className="mr-2 h-4 w-4 text-orange-400" />
@@ -52,18 +58,21 @@ export function ProductRowActions({ product }: ProductRowActionsProps) {
                                     <span className="text-emerald-400">Activar</span>
                                 </>
                             )}
-                        </DropdownMenuItem>
-                    </button>
+                        </button>
+                    </DropdownMenuItem>
                 </form>
 
                 <form action={deleteProduct}>
                     <input type="hidden" name="id" value={product.id} />
-                    <button className="w-full text-left">
-                        <DropdownMenuItem className="hover:bg-red-500/10 cursor-pointer focus:bg-red-500/10 text-red-400 focus:text-red-400">
+                    <DropdownMenuItem asChild>
+                        <button
+                            type="submit"
+                            className="flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-red-500/10 focus:bg-red-500/10 hover:text-red-400 focus:text-red-400 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 text-red-400"
+                        >
                             <Trash2 className="mr-2 h-4 w-4" />
                             Eliminar
-                        </DropdownMenuItem>
-                    </button>
+                        </button>
+                    </DropdownMenuItem>
                 </form>
             </DropdownMenuContent>
         </DropdownMenu>
