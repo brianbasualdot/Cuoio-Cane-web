@@ -18,7 +18,16 @@
             "allow": [
                 "$PROGRAMDATA/Cuoiodesk",
                 "$PROGRAMDATA/Cuoiodesk/*",
-                "$PROGRAMDATA/Cuoiodesk/**"
+                "$PROGRAMDATA/Cuoiodesk/**",
+                "$PROGRAMDATA/Cuoiodesk/LPM",
+                "$PROGRAMDATA/Cuoiodesk/LPM/*",
+                "$PROGRAMDATA/Cuoiodesk/LPM/**",
+                "$APPDATA/Cuoiodesk",
+                "$APPDATA/Cuoiodesk/*",
+                "$APPDATA/Cuoiodesk/**",
+                "$APPDATA/Cuoiodesk/LPM",
+                "$APPDATA/Cuoiodesk/LPM/*",
+                "$APPDATA/Cuoiodesk/LPM/**"
             ]
         }
     ]
