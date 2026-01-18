@@ -111,7 +111,7 @@ export class ReportsService {
         return doc as unknown as Readable; // PDFKit is a stream
     }
 
-    private addPdfRow(doc: PDFDocument, label: string, value: string) {
+    private addPdfRow(doc: PDFKit.PDFDocument, label: string, value: string) {
         doc.text(`${label}: ${value}`);
     }
 
