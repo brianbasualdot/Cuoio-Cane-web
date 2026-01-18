@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import PDFDocument from 'pdfkit';
+import PDFDocument = require('pdfkit');
 import { Parser } from 'json2csv';
 import { Readable } from 'stream';
 
