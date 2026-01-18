@@ -1,18 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useFormState } from 'react-dom';
-import { ArrowLeft, Save, Upload } from 'lucide-react';
+import { ArrowLeft, Save, Upload, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/ActionButton';
 import { Input } from '@/components/ui/InputField';
 import { Card, CardContent } from '@/components/ui/CardContainer';
 import { updateProduct } from '../actions';
-import { useState, useRef } from 'react';
+import { useState, useRef, useActionState } from 'react';
 
 const initialState = { error: null };
 
 export function EditProductForm({ product }: { product: any }) {
-    const [state, formAction] = useFormState(updateProduct, initialState);
+    const [state, formAction, isPending] = useActionState(updateProduct, initialState);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -171,9 +170,9 @@ export function EditProductForm({ product }: { product: any }) {
                         </CardContent>
                     </Card>
 
-                    <Button type="submit" className="w-full" size="lg">
-                        <Save className="mr-2 h-4 w-4" />
-                        Guardar Cambios
+                    <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+                        {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                        {isPending ? 'Guardando...' : 'Guardar Cambios'}
                     </Button>
                 </div>
             </div>

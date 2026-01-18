@@ -20,6 +20,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { login, loginStaff } from './actions';
 import { AlertCircle } from 'lucide-react';
 
+// Wrapper to prevent Server Action crash when offline
+const safeLoginStaff = async (prevState: any, formData: FormData) => {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        return { error: 'No hay conexión a internet.' };
+    }
+    try {
+        return await loginStaff(prevState, formData);
+    } catch (e) {
+        return { error: 'Error de conexión con el servidor.' };
+    }
+};
+
+const safeLogin = async (prevState: any, formData: FormData) => {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        return { error: 'No hay conexión a internet.' };
+    }
+    try {
+        return await login(prevState, formData);
+    } catch (e) {
+        return { error: 'Error de conexión con el servidor.' };
+    }
+};
+
 function SubmitButton({ label = 'Ingresar' }: { label?: string }) {
     const { pending } = useFormStatus();
 
@@ -31,7 +54,7 @@ function SubmitButton({ label = 'Ingresar' }: { label?: string }) {
 }
 
 function StaffLoginForm() {
-    const [state, formAction] = useActionState(loginStaff, null);
+    const [state, formAction] = useActionState(safeLoginStaff, null);
 
     return (
         <form action={formAction} className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
@@ -71,7 +94,7 @@ function StaffLoginForm() {
 }
 
 export default function LoginPage() {
-    const [state, formAction] = useActionState(login, null);
+    const [state, formAction] = useActionState(safeLogin, null);
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-background px-4">

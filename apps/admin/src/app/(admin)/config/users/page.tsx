@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/CardContainer';
-import { Plus, Trash2, Edit, Loader2, UserCheck, UserX } from 'lucide-react';
+import { Plus, Trash2, Loader2, UserCheck, UserX } from 'lucide-react';
 import { Button } from '@/components/ui/ActionButton';
 import { cn } from '@/lib/utils'; // Assuming utils location
+import { useOfflineMutation } from '@/hooks/useOfflineMutation';
+import { useStaffAlias } from '@/contexts/StaffAliasContext';
 
 interface StaffMember {
     id: string;
@@ -14,86 +17,143 @@ interface StaffMember {
 }
 
 export default function StaffPage() {
-    const [staff, setStaff] = useState<StaffMember[]>([]);
-    const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
 
     // Modal State
     const [formAlias, setFormAlias] = useState('');
     const [formCode, setFormCode] = useState('');
-    const [creating, setCreating] = useState(false);
     const [message, setMessage] = useState('');
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 
+    // React Query for caching and offline support
+    const { data: staff = [], isLoading: loading, refetch } = useQuery({
+        queryKey: ['staff'],
+        queryFn: async () => {
+            // Standard fetch is fine here because useQuery handles the promise
+            // If offline, fetch throws, and if we have cache, it returns cache.
+            const res = await fetch(`${apiUrl}/staff`);
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json() as Promise<StaffMember[]>;
+        },
+        // We rely on global defaultOptions usually, but can override here
+    });
+
     useEffect(() => {
-        fetchStaff();
+        // Optional: listen to online event to refetch automatically?
+        // React Query does this by default with 'refetchOnReconnect'.
     }, []);
 
-    const fetchStaff = async () => {
-        setLoading(true);
-        try {
-            const res = await fetch(`${apiUrl}/staff`);
-            if (res.ok) {
-                const data = await res.json();
-                setStaff(data);
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setLoading(false);
+    // Context
+    const { alias: currentAlias } = useStaffAlias();
+    // Fallback ID if alias is null (e.g. Admin acting as system)
+    // The requirement says "operario_id". For Admin, we might use "ADMIN" or user UUID.
+    // For now, we use a placeholder or the alias itself if available.
+    const operarioId = currentAlias || 'SYSTEM_ADMIN';
+
+    // Mutations
+    // Actually we don't have queryClient in scope, need to get it via useQueryClient hook
+    // But we are inside the component, so:
+    const client = useQueryClient();
+
+    const { mutate: createStaff, isLoading: isCreatingMutation } = useOfflineMutation({
+        entidad: 'staff',
+        accion: 'create',
+        onSuccess: (res: any) => {
+            setShowModal(false);
+            // Simple safe ID for optimistic update
+            const tempId = 'opt_' + Date.now() + Math.random().toString(36).slice(2);
+            const newStaff = { id: tempId, alias: formAlias, operative_code: formCode, is_active: true }; // Optimistic ID
+
+            // Optimistic Update
+            client.setQueryData(['staff'], (old: StaffMember[] | undefined) => {
+                return old ? [...old, newStaff] : [newStaff];
+            });
+
+            setFormAlias('');
+            setFormCode('');
+            setMessage('');
+
+            refetch(); // Fetch real data to confirm ID
+        },
+        onError: (err) => setMessage(err instanceof Error ? err.message : 'Error creating staff')
+    });
+
+    const { mutate: updateStatus } = useOfflineMutation({
+        entidad: 'staff',
+        accion: 'update',
+        onSuccess: () => {
+            // We can't easily optimistic update here because 'updateStatus' handler has the variables (id, status)
+            // but onSuccess doesn't receive them back unless we pass them through or closure.
+            // Refetch is fine for status if sync is fast, but for offline strictness we should closure it.
+            // However, let's rely on refetch for simplicity unless user complaints about toggle lag specifically.
+            // Actually user DID complain: "lo mismo si habilito o deshabilito".
+            refetch();
         }
-    };
+    });
+
+    const { mutate: deleteStaff } = useOfflineMutation({
+        entidad: 'staff',
+        accion: 'delete',
+        onSuccess: () => refetch()
+    });
+
+    // We need to wrap handlers to perform optimistic updates manually if we want perfection, 
+    // OR we change useOfflineMutation to allow onMutate?
+    // "useOfflineMutation" implementation is simple.
+    // Let's just do manual optimistic update INSIDE the handler before calling mutate? 
+    // No, mutate is async.
+
+    // BETTER APPROACH: Pass custom onSuccess closures to mutate calls in handlers?
+    // No, hook is defined with static callbacks.
+
+    // Let's redefine the mutations below to be dynamic or fix the lag via 'await sync' first.
+    // Verification: The user said "one step behind". The `await sync` fixes the Online step behind.
+    // For Offline step behind (optimistic), we DO need setQueryData.
+
+    // Let's leave Create optimistic as above.
+    // For Toggle/Delete, we will implement optimistic updates in the Next Step if 'await sync' isn't enough for Online,
+    // BUT for Offline support we MUST do it.
+
+    // Updating 'updateStatus' and 'deleteStaff' to use queryClient is tricky without passing args to onSuccess.
+    // Refactoring to just define the hook once and use `params` in mutate is how it works.
+    // But `onSuccess` is defined at hook level in my current implementation.
+
+    // QUICK FIX: Since I can't easily access the `id` inside `onSuccess` defined here without changing the hook architecture,
+    // I will modify `toggleStatus` and `handleDelete` to manually update cache BEFORE or AFTER calling mutate,
+    // assuming success (Optimistic).
+    // Actually, `mutate` is void/async.
+
+    // Let's revert to `await sync` fix first for `create`, and see if that satisfies the "online" flow.
+    // For "offline", the `create` optimistic update above helps. 
+    // For `toggle`, I will do manual cache update in the handler function.
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
-        setCreating(true);
-        setMessage('');
-
-        try {
-            const res = await fetch(`${apiUrl}/staff`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ alias: formAlias, code: formCode })
-            });
-
-            if (!res.ok) {
-                const err = await res.json();
-                throw new Error(err.message || 'Failed to create');
-            }
-
-            setShowModal(false);
-            setFormAlias('');
-            setFormCode('');
-            fetchStaff();
-        } catch (err: any) {
-            setMessage(err.message);
-        } finally {
-            setCreating(false);
-        }
+        // Payload matches what the API expects for creation
+        createStaff({ alias: formAlias, code: formCode }, operarioId);
     };
 
     const toggleStatus = async (id: string, currentStatus: boolean) => {
-        try {
-            await fetch(`${apiUrl}/staff/${id}/status`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ isActive: !currentStatus })
-            });
-            fetchStaff();
-        } catch (e) {
-            console.error(e);
-        }
+        // Optimistic Update
+        client.setQueryData(['staff'], (old: StaffMember[] | undefined) => {
+            if (!old) return [];
+            return old.map(s => s.id === id ? { ...s, is_active: !currentStatus } : s);
+        });
+
+        updateStatus({ id, isActive: !currentStatus }, operarioId);
     };
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this staff member? This cannot be undone.')) return;
-        try {
-            await fetch(`${apiUrl}/staff/${id}`, { method: 'DELETE' });
-            fetchStaff();
-        } catch (e) {
-            console.error(e);
-        }
+
+        // Optimistic Delete
+        client.setQueryData(['staff'], (old: StaffMember[] | undefined) => {
+            if (!old) return [];
+            return old.filter(s => s.id !== id);
+        });
+
+        deleteStaff({ id }, operarioId);
     };
 
     return (
@@ -208,7 +268,7 @@ export default function StaffPage() {
 
                                 <div className="flex gap-2 pt-2">
                                     <Button type="button" variant="outline" onClick={() => setShowModal(false)} className="w-full">Cancel</Button>
-                                    <Button type="submit" loading={creating} className="w-full">Create</Button>
+                                    <Button type="submit" loading={isCreatingMutation} className="w-full">Create</Button>
                                 </div>
                             </form>
                         </CardContent>

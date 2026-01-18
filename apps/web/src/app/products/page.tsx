@@ -2,6 +2,8 @@ import { api } from '@/lib/api';
 import { ProductCard } from '@/components/product/ProductCard';
 import { PackageOpen } from 'lucide-react';
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 async function getProducts() {
     try {
         const products = await api.get('/products');

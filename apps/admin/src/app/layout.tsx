@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 import { createClient } from '@/lib/supabase/server';
-import { StaffAliasProvider } from '@/contexts/StaffAliasContext';
+import { Providers } from '@/components/Providers';
 
 export default async function RootLayout({
     children,
@@ -43,21 +43,26 @@ export default async function RootLayout({
 
     if (user) {
         // Fetch role from profiles
-        const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .single();
+        try {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single();
 
-        userRole = profile?.role || null;
+            userRole = profile?.role || null;
+        } catch (e) {
+            console.warn('Offline: Could not fetch user role in Layout');
+            // userRole remains null, Client needs to handle this fallback
+        }
     }
 
     return (
         <html lang="es" className={`${inter.variable} ${playfair.variable} ${cormorant.variable}`}>
             <body className="antialiased min-h-screen bg-background text-zinc-200">
-                <StaffAliasProvider userRole={userRole}>
+                <Providers userRole={userRole}>
                     {children}
-                </StaffAliasProvider>
+                </Providers>
             </body>
         </html>
     );

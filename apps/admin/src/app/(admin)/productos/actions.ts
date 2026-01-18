@@ -38,7 +38,7 @@ export async function createProduct(currentState: ProductFormState, formData: Fo
         const filePath = `${fileName}`;
 
         const { error: uploadError } = await supabase.storage
-            .from('products')
+            .from('product-images')
             .upload(filePath, image);
 
         if (uploadError) {
@@ -48,7 +48,7 @@ export async function createProduct(currentState: ProductFormState, formData: Fo
         }
 
         const { data: { publicUrl } } = supabase.storage
-            .from('products')
+            .from('product-images')
             .getPublicUrl(filePath);
 
         imageUrls.push(publicUrl);
@@ -162,7 +162,7 @@ export async function updateProduct(currentState: ProductFormState, formData: Fo
         const fileName = `${currentProduct.slug}-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
-            .from('products')
+            .from('product-images')
             .upload(fileName, image);
 
         if (uploadError) {
@@ -171,7 +171,7 @@ export async function updateProduct(currentState: ProductFormState, formData: Fo
         }
 
         const { data: { publicUrl } } = supabase.storage
-            .from('products')
+            .from('product-images')
             .getPublicUrl(fileName);
 
         newImageUrls.push(publicUrl);

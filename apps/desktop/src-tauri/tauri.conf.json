@@ -4,10 +4,10 @@
     "version": "0.1.0",
     "identifier": "com.cuoiocane.desktop",
     "build": {
-        "beforeDevCommand": "npm run dev --prefix ../../apps/web",
-        "beforeBuildCommand": "npm run build:desktop --prefix ../../apps/web",
+        "beforeDevCommand": "npm run dev --prefix ../../apps/admin",
+        "beforeBuildCommand": "npm run build:desktop --prefix ../../apps/admin",
         "devUrl": "http://localhost:3000",
-        "frontendDist": "../../web/out"
+        "frontendDist": "../../admin/out"
     },
     "app": {
         "windows": [
@@ -27,12 +27,5 @@
         "icon": [
             "icons/icons.ico"
         ]
-    },
-    "plugins": {
-        "fs": {
-            "scope": [
-                "$PROGRAMDATA/Cuoiodesk/LPM/**"
-            ]
-        }
     }
 }

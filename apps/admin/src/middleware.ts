@@ -54,12 +54,38 @@ export async function middleware(request: NextRequest) {
         }
     );
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
+    let user = null;
+    try {
+        const { data } = await supabase.auth.getUser();
+        user = data.user;
+    } catch (e) {
+        // Network error likely (Offline Mode)
+        // If we have a session cookie, we optimistically allow it for now
+        // Ideally we verify the JWT locally, but for now checking existence is 'okay' for offline-first desktop
+        const session = request.cookies.get('sb-access-token') || request.cookies.get(`sb-${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID}-auth-token`);
+        // Note: The cookie name depends on how it's set. Supabase SSR handles this hiddenly. 
+        // But `supabase.auth.getSession()` might work better here if getUser fails?
+        // Actually, getSession() also might try to verify.
+
+        // Let's try getSession as fallback
+        try {
+            const { data: sessionData } = await supabase.auth.getSession();
+            if (sessionData.session) user = sessionData.session.user;
+        } catch (e2) {
+            // Still failed.
+        }
+    }
 
     // 1. Redirect to Login if not authenticated and not on login page
     if (!user && !request.nextUrl.pathname.startsWith('/login')) {
+        // CRITICAL: If offline, we might want to allow pass if we THINK we are logged in?
+        // But without user object we can't check role.
+        // Let's assume if getUser failed completely but we have cookies, we let it pass to Client to handle?
+
+        // Only redirect if we are SURE we have no session (cookies empty)
+        // Checking cookies manually is hard because of encryption/naming.
+
+        // If user is null, we redirect. This is why he got kicked out.
         return NextResponse.redirect(new URL('/login', request.url));
     }
 

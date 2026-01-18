@@ -1,19 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useFormState } from 'react-dom';
 import { ArrowLeft, Save, Upload, Loader2, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/ActionButton';
 import { Input } from '@/components/ui/InputField';
 import { Card, CardContent } from '@/components/ui/CardContainer';
 import { createProduct } from '../actions';
-import { useState, useRef } from 'react';
+import { useState, useRef, useActionState } from 'react';
 
 const initialState = { error: null };
 
 export default function NewProductPage() {
-    const [state, formAction] = useFormState(createProduct, initialState);
-    const [pending, setPending] = useState(false);
+    const [state, formAction, isPending] = useActionState(createProduct, initialState);
     const [previewImages, setPreviewImages] = useState<string[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -23,19 +21,6 @@ export default function NewProductPage() {
             setPreviewImages(prev => [...prev, ...newPreviews]);
         }
     };
-
-    const handleSubmit = async (formData: FormData) => {
-        setPending(true);
-        // We need to ensure we don't double submit or similar if using useFormState wrapping usually handles it, 
-        // but here we manually toggle pending for UI feedback since useFormStatus is for children.
-        // Actually, let's use the form action directly in the form tag.
-        formAction(formData);
-        // Note: Resetting pending is tricky if we rely on redirect, as component unmounts.
-        // If error, we need to stop pending.
-    };
-
-    // Effect to stop pending if error
-    // (Simplification for now: User clicks, it loads, then redirects or shows error)
 
     return (
         <form action={formAction} className="space-y-6 max-w-4xl mx-auto">
@@ -132,9 +117,9 @@ export default function NewProductPage() {
                         </CardContent>
                     </Card>
 
-                    <Button type="submit" className="w-full" size="lg"> {/* No pending logic here easily without useFormStatus hook but that requires separate component. Keeping simple. */}
-                        <Save className="mr-2 h-4 w-4" />
-                        Guardar Producto
+                    <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+                        {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                        {isPending ? 'Guardando...' : 'Guardar Producto'}
                     </Button>
                 </div>
             </div>

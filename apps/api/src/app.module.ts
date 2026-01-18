@@ -9,6 +9,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { DiscountsModule } from './modules/discounts/discounts.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { StaffModule } from './modules/staff/staff.module';
+import { SyncModule } from './modules/sync/sync.module';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { StaffModule } from './modules/staff/staff.module';
         DiscountsModule,
         ReportsModule,
         StaffModule,
+        SyncModule,
     ],
     controllers: [],
     providers: [],

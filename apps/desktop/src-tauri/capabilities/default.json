@@ -16,7 +16,9 @@
         {
             "identifier": "fs:scope",
             "allow": [
-                "$PROGRAMDATA/Cuoiodesk/LPM/**"
+                "$PROGRAMDATA/Cuoiodesk",
+                "$PROGRAMDATA/Cuoiodesk/*",
+                "$PROGRAMDATA/Cuoiodesk/**"
             ]
         }
     ]

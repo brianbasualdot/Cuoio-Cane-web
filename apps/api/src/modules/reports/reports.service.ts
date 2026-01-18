@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import * as PDFDocument from 'pdfkit';
+import PDFDocument from 'pdfkit';
 import { Parser } from 'json2csv';
 import { Readable } from 'stream';
 
@@ -111,7 +111,7 @@ export class ReportsService {
         return doc as unknown as Readable; // PDFKit is a stream
     }
 
-    private addPdfRow(doc: PDFKit.PDFDocument, label: string, value: string) {
+    private addPdfRow(doc: PDFDocument, label: string, value: string) {
         doc.text(`${label}: ${value}`);
     }
 
